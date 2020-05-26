@@ -10,9 +10,9 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("", name="app.login")
+     * 
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    /*public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');
@@ -24,6 +24,14 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('', ['last_username' => $lastUsername, 'error' => $error !==null]);
+    }*/
+
+    /**
+     * @Route("/login", name="app.login")
+     */
+    public function login()
+    {
+        return new Response('Ok response');
     }
 
     /**

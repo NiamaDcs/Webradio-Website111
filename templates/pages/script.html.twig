@@ -85,15 +85,80 @@ $(document).ready(function() {
         playPause4();
     });// cli 4
 
-    $(".show_token").hide();
+String.prototype.rtrim = function() {
+    return this.replace(/\s+$/, "");
+}
+
+        let lowerCaseLetters = /[a-z]/gi;
+        let numbers = /[0-9]/i;
+        let upperCaseLetters = /[A-Z]/gi;
+
+function inputUsername(inputData){
+    let usernameData = inputData.rtrim();
+    let usernameInput = $('#register_username');
+
+    if(usernameData.length < 1){
+        usernameInput.after('<div class="erreur text-dark small" style="font-size: xx-small;">Le nom d\'utilisateur doit être de 3 caractères minimum et ne peux pas contenir d\'espace</div>');   
+        
+    }else{
+        if(usernameData > 10) {
+            usernameInput.after('<div class="erreur text-dark small" style="font-size: xx-small;">Le nom d\'utilisateur doit être  moins de 10 caractères</div>');
+        }
+         return usernameData;
+           
+    }
+}//  verify username
+
+function inputEmail(inputData){
+    let emailData = inputData.rtrim();
+    emailInput = $('#register_email');
+    if(emailData.length < 1) {
+        emailInput.after('<div class="erreur text-dark small" style="font-size: xx-small;">Ce champ est obligatoire</div>');
+    }else{
+        let regEx = /^[a-zA-Z0-9][a-zA-Z0-9._%+-]{0,63}@(?:[a-zA-Z0-9-]{1,63}\.){1,125}[a-zA-Z]{2,63}$/;
+        let validEmail = regEx.test(emailData);
+
+        if(!validEmail)
+        {
+            emailInput.after('<span class="erreur text-dark small" style="font-size: xx-small;">Merci de rentrer une adresse email valide</span>');
+        }
+        else{
+            return emailData;
+        }
+    }
+
+}//  email verify
+
+function inputPassword(inputData){
+    let passwordData = inputData;
+    passwordInput = $('#register_password');
+
+    if(passwordData.length < 8){
+        passwordInput.after('<div class="erreur text-dark small-2" style="font-size: xx-small;">Merci de rentrer un mot de passe de 8 caractères minimum</div>');
+        
+    }else  {
+
+        if(!passwordData.match(lowerCaseLetters)) {
+            passwordInput.after('<div class="erreur text-dark small-2" style="font-size: xx-small;">Le mot de passe doit contenir au moins une letter minuscule</div>');   
+        } 
+        else if(!passwordData.match(upperCaseLetters)) {
+            passwordInput.after('<div class="erreur text-dark small-2" style="font-size: xx-small;">Le mot de passe doit contenir au moins une letter majuscule</div>');   
+        }
+
+        else if (!passwordData.match(numbers)) {
+            passwordInput.after('<div class="erreur text-dark small-2" style="font-size: xx-small;">Le mot de passe doit contenir au moins un chiffre</div>');   
+        }
+        return passwordData;
+    }
+} // password verify
+
+   
     $(".image-upload").hide();
     $(".image-upload-channel").hide();
-    $(".show_login_token").hide();
     $("#forgot_pass_form").hide();
     let user = {};
     let channel = {};
     let downloadURL;
-    let downloadURLChannel;
     let downloadURLRadio;
 
     const reset = () => {
@@ -106,50 +171,63 @@ $(document).ready(function() {
         $(".btn_submit").attr("disabled", true);
         $(".btn_submit").css("background-color", "gray");
     }
+    
 
-    $("#register_form").on('submit', (e) => {
-        e.preventDefault(); // avoid to execute the actual submit of the form.
-        disable()
+    $('#inscription').click(function(e) {
+    e.preventDefault();
 
-        let data = {
-            email: $("#register_email").val(),
-            username: $("#register_username").val(),
-            password: $("#register_password").val()
-        };
+    let email = $('#register_email').val();
+    let username = $('#register_username').val();
+    let password = $('#register_password').val();
 
-        $.ajax({
-            type: "POST",
-            url: 'https://webradio-stream.herokuapp.com/auth/register',
-            data: data,
-            success: (response) =>
-            {
-                reset()
-                if (response.message.token) {
+    let dataUsername = inputUsername(username);
+    let dataEmail = inputEmail(email);
+    let dataPassword = inputPassword(password);
+
+    console.log(dataUsername+" "+dataEmail+" "+dataPassword);
+
+    if (dataUsername !== undefined && dataEmail !== undefined && dataPassword !== undefined)
+    {
+        
+          $.ajax({
+                type: "POST", 
+                url: "/register", 
+                data: JSON.stringify({
+                    "username": dataUsername,
+                    "email": dataEmail,
+                    "password": dataPassword,
+                }),
+                async: true,
+                success: function(response) {
+                    /*if (response.message.token) {
                     localStorage.setItem("token", response.message.token);
-                    $('#register_response').html("");
-                    $('#register_json_response').html(JSON.stringify(response, undefined, 4));
-                    $(".show_token").show();
-                    $("#new_token").html(response.message.token);
-                } else {
-                    $('#register_response').html("");
-                    $('#register_json_response').html(JSON.stringify(response, undefined, 4));
-                }
-            },
-            error: (err) => {
-                reset();
-                $('#register_response').html("");
-                $('#register_json_response').html(JSON.stringify(err.responseJSON, undefined, 4));
-            }
-        }); //fin register
-    }); //register
 
-    $("#login_form").on('submit', (e) => {
-        e.preventDefault(); // avoid to execute the actual submit of the form.
+                    }*/
+                    console.log(response);
+                   
+                },
+                error: function (err) {
+                    
+                    console.log(err);
+                
+                }
+            });
+
+    }else{
+        console.log('les données entrées sont invalides!!');
+    }
+
+});// fin register
+
+    $("#login").click((e) => {
+        e.preventDefault(); 
         disable();
 
+        let email = $("#login_email").val();
+        let password = $("#login_password").val();
+    
         let data = {
-            email: $("#login_email").val(),
-            password: $("#login_password").val()
+            
         };
 
         $.ajax({
@@ -165,7 +243,7 @@ $(document).ready(function() {
                     $('#login_json_response').html(JSON.stringify(response, undefined, 4));
                     $(".show_login_token").show();
                     $("#new_login_token").html(response.message.token);
-                    console.log(response.message)
+                    console.log(response.message);
                 } else {
                     $('#login_response').html("");
                     $('#login_json_response').html(JSON.stringify(response, undefined, 4));
@@ -179,6 +257,7 @@ $(document).ready(function() {
             }
         });
     });// login
+
 
 });
 
