@@ -85,6 +85,8 @@ $(document).ready(function() {
         playPause4();
     });// cli 4
 
+});
+
 String.prototype.rtrim = function() {
     return this.replace(/\s+$/, "");
 }
@@ -93,9 +95,9 @@ String.prototype.rtrim = function() {
         let numbers = /[0-9]/i;
         let upperCaseLetters = /[A-Z]/gi;
 
-function inputUsername(inputData){
+function inputUsername(inputData,input){
     let usernameData = inputData.rtrim();
-    let usernameInput = $('#register_username');
+    let usernameInput = input;
 
     if(usernameData.length < 1){
         usernameInput.after('<div class="erreur text-dark small" style="font-size: xx-small;">Le nom d\'utilisateur doit être de 3 caractères minimum et ne peux pas contenir d\'espace</div>');   
@@ -109,9 +111,10 @@ function inputUsername(inputData){
     }
 }//  verify username
 
-function inputEmail(inputData){
+function inputEmail(inputData, input){
     let emailData = inputData.rtrim();
-    emailInput = $('#register_email');
+
+    emailInput = input;
     if(emailData.length < 1) {
         emailInput.after('<div class="erreur text-dark small" style="font-size: xx-small;">Ce champ est obligatoire</div>');
     }else{
@@ -129,9 +132,9 @@ function inputEmail(inputData){
 
 }//  email verify
 
-function inputPassword(inputData){
+function inputPassword(inputData, input){
     let passwordData = inputData;
-    passwordInput = $('#register_password');
+    passwordInput = input;
 
     if(passwordData.length < 8){
         passwordInput.after('<div class="erreur text-dark small-2" style="font-size: xx-small;">Merci de rentrer un mot de passe de 8 caractères minimum</div>');
@@ -175,16 +178,21 @@ function inputPassword(inputData){
 
     $('#inscription').click(function(e) {
     e.preventDefault();
+      disable();
 
     let email = $('#register_email').val();
+    let inpEmail = $('#register_email');
+
     let username = $('#register_username').val();
+    let inpUser = $('#register_username');
+
     let password = $('#register_password').val();
+    let inpPassword = $('#register_password');
 
-    let dataUsername = inputUsername(username);
-    let dataEmail = inputEmail(email);
-    let dataPassword = inputPassword(password);
+    let dataUsername = inputUsername(username,inpUser);
+    let dataEmail = inputEmail(email, inpEmail);
+    let dataPassword = inputPassword(password, inpPassword);
 
-    console.log(dataUsername+" "+dataEmail+" "+dataPassword);
 
     if (dataUsername !== undefined && dataEmail !== undefined && dataPassword !== undefined)
     {
@@ -199,6 +207,7 @@ function inputPassword(inputData){
                 }),
                 async: true,
                 success: function(response) {
+                    reset();
                     /*if (response.message.token) {
                     localStorage.setItem("token", response.message.token);
 
@@ -207,59 +216,64 @@ function inputPassword(inputData){
                    
                 },
                 error: function (err) {
-                    
+                    reset();
                     console.log(err);
                 
                 }
             });
 
     }else{
+        
+        $('#register-alert').css("display", "block");
+        $('#register-alert').html("les données entrées sont invalides!!");
+
         console.log('les données entrées sont invalides!!');
+        
     }
 
 });// fin register
 
-    $("#login").click((e) => {
+    $("#login").click(function(e){
         e.preventDefault(); 
         disable();
 
-        let email = $("#login_email").val();
-        let password = $("#login_password").val();
-    
-        let data = {
-            
-        };
+        let emailLogin = $("#login_email").val();
+        let inpEmail = $("#login_email");
 
-        $.ajax({
-            type: "POST",
-            url: 'https://webradio-stream.herokuapp.com/auth/login',
-            data: data,
-            success: (response) =>
-            {
-                reset();
-                if (response.message.token) {
-                    localStorage.setItem("token", response.message.token);
-                    $('#login_response').html("");
-                    $('#login_json_response').html(JSON.stringify(response, undefined, 4));
-                    $(".show_login_token").show();
-                    $("#new_login_token").html(response.message.token);
-                    console.log(response.message);
-                } else {
-                    $('#login_response').html("");
-                    $('#login_json_response').html(JSON.stringify(response, undefined, 4));
+        let passwordLogin = $("#login_password").val();
+        let inpPassword = $("#login_password");
+
+        let loginEmail = inputEmail(emailLogin,inpEmail);
+        let loginPassword = inputPassword(passwordLogin,inpPassword);
+ 
+        if (loginEmail !== undefined && loginPassword !== undefined)
+        {
+            let data = JSON.stringify({email: loginEmail, password: loginPassword});
+
+            $.ajax({
+                type: "POST",
+                url: '/login',
+                data: data,
+                success: (response) =>
+                {
+                    reset();
+                    console.log(response);
+                },
+                error: (err) => {
+                    reset();
+                    console.log(err);
                 }
-            },
-            error: (err) => {
-                reset();
-                $('#login_response').html("");
-                $('#login_json_response').html(JSON.stringify(err.responseJSON, undefined, 4));
-                console.log(err.responseJSON);
-            }
-        });
+            });// fin ajax
+        }else{
+            $('#login-alert').css("display", "block");
+            $('#login-alert').html("les données entrées sont invalides!!");
+
+            console.log('les données entrées sont invalides!!');
+        }
     });// login
 
 
-});
+
 
 
 

@@ -3,35 +3,46 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Unirest;
 
 class SecurityController extends AbstractController
 {
+    
     /**
-     * 
+     * @Route("/login", name="app.login", methods={"POST"})
      */
-    /*public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(Request $request)
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
+        if($request->isXmlHttpRequest()){
+            $content = $request->getContent();
 
-        // get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
+            $params = json_decode($content, true);
 
-        return $this->render('', ['last_username' => $lastUsername, 'error' => $error !==null]);
-    }*/
 
-    /**
-     * @Route("/login", name="app.login")
-     */
-    public function login()
-    {
-        return new Response('Ok response');
+            $email = $params['email'];
+            $password = $params['password'];
+
+            $headers = array('Accept' => 'application/json');
+            $query = array('email' => $email, 'password' => $password);
+            
+            $url = 'https://webradio-stream.herokuapp.com/auth/login';
+            $body = Unirest\Request\Body::form($query);
+ 
+            $response = Unirest\Request::post($url,$headers,$body);
+ 
+           $result = $response->raw_body;
+
+            return new Response($result, 201);
+            //return new Response(json_encode($query), 201);
+            
+        }
+        
+        return $this->render('page/home.html.twig');
+        
     }
 
     /**

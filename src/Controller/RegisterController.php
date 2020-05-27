@@ -7,11 +7,7 @@ use App\Security\UsersAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use Unirest;
 
 
@@ -20,7 +16,7 @@ class RegisterController extends BaseController
 
     
      /**
-     * @Route("/register", name="user.registration")
+     * @Route("/register", name="user.registration", methods={"POST"})
      */
 
     public function register(Request $request, GuardAuthenticatorHandler $guardHandler, UsersAuthenticator $authenticator)
@@ -46,11 +42,6 @@ class RegisterController extends BaseController
  
            $result = $response->raw_body;
 
-            
-            /*if($result){
-                return $this->redirectToRoute('profile.index');
-            }*/
-            //return new Response(json_encode($response->raw_body), 201);
             return new Response($result, 201);
             
         }
@@ -65,7 +56,7 @@ class RegisterController extends BaseController
             );*/
         
             //return new Response('Erreur', 404); 
-            return $this->render('register/modal.html.twig');
+            return $this->render('page/home.html.twig');
     }
 
     
