@@ -14,7 +14,7 @@ use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;
  * @method User[]    findAll()
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends ServiceEntityRepository
+class UsersRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -53,11 +53,11 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findTheUser($username) 
+    public function findTheUser($token) 
     {
         return $this->findVisibleQuery()
-        ->andWhere('u.username = :username')
-        ->setParameter(':username', $username)
+        ->andWhere('u.oauthAccessToken = :token')
+        ->setParameter(':token', $token)
         ->getQuery()
         ->getResult();
 

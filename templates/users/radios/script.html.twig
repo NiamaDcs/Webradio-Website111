@@ -85,7 +85,56 @@ $(document).ready(function() {
         playPause4();
     });
 });
+</script>
+<script>
+$(document).ready(function() {
 
-   
+    let store = true;
+    const token = localStorage.getItem("token");
 
- </script>
+    if(token !== ""){
+
+        $.ajax({
+            type: "POST", 
+            url: "/profile/show", 
+            data: JSON.stringify({
+                "token": token,
+            }),
+            dataType: 'json',
+            async: true,
+            success: function(response) {
+
+                if(response != undefined){
+                    $('#myname').html(response.user[0].username);
+                    $('#logo-setting').attr('src', user.user[0].avatar);
+                }
+                console.log(response);
+                
+            },
+            error: function (err) {
+                
+                console.log(err);
+            }
+        });
+    }else{
+        store = false;
+        localStorage.removeItem('token');
+
+         window.location.href = '/';
+
+        console.log("Vous êtes deconnecté");
+    }
+
+    $('#deconnecter').click(function(e){
+        
+        if(token !== null){
+
+            store = false;
+            localStorage.removeItem('token');
+            console.log("Vous êtes deconnecté");
+        }
+        
+    });
+ 
+});
+</script>

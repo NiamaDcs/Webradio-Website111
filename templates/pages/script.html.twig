@@ -17,6 +17,17 @@
 <script>
 
 $(document).ready(function() {
+
+    let store = true;
+    const token = localStorage.getItem("token");
+
+    if(token !== null ) {
+
+        localStorage.removeItem('token');
+        console.log('Vous êtes deconnecté');
+        store = false;
+    }
+        
     
     let track =  document.getElementById("track");
    
@@ -205,13 +216,17 @@ function inputPassword(inputData, input){
                     "email": dataEmail,
                     "password": dataPassword,
                 }),
+                dataType: 'json',
                 async: true,
                 success: function(response) {
                     reset();
-                    /*if (response.message.token) {
-                    localStorage.setItem("token", response.message.token);
-
-                    }*/
+                    if(response.message != undefined)
+                    {
+                        
+                         localStorage.setItem("token", response.message.token);
+                         // modal show connexion
+                    } 
+                    else console.log('failed');
                     console.log(response);
                    
                 },
@@ -254,9 +269,22 @@ function inputPassword(inputData, input){
                 type: "POST",
                 url: '/login',
                 data: data,
+                dataType: 'json',
                 success: (response) =>
                 {
                     reset();
+                    if(response.message != undefined) 
+                    {
+                        
+                        localStorage.setItem("token", response.message.token);
+
+                        $('#login-success').css("display", "block");
+                        $('#login-success').html("L'affichage de votre profile peut prendre du temps à arriver. Si rien ne se passe, attendez quelques secondes");
+
+                        window.location.href = '/profile';
+                    }
+                    else console.log('failed');
+
                     console.log(response);
                 },
                 error: (err) => {

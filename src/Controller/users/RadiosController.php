@@ -5,30 +5,28 @@ namespace App\Controller\users;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
 use App\Repository\UsersRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Unirest;
 
     /**
-     * @Route("/profile")
+     * @Route("/radios")
      */
-class ProfilController extends BaseController
-{
-  
+class RadiosController extends BaseController {
+
      /**
-     * @Route("/", name="profile.index", methods={"GET"})
+     * @Route("/", name="radios.index", methods={"GET"})
      */
-    public function index() :Response
+    public function index()
     {
-        return $this->render("users/base.html.twig");      
+        return $this->render("users/radios/base.html.twig"); 
     }
 
     /**
-     * @Route("/show", name="profile.show", methods={"POST"})
+     * @Route("/show", name="radios.show", methods={"POST"})
      */
-    public function dataUser(Request $request){
-
+    public function getRadios(Request $request)
+    {
         if($request->isXmlHttpRequest()){
             $content = $request->getContent();
 
@@ -37,7 +35,7 @@ class ProfilController extends BaseController
 
             $headers = array('Accept' => 'application/json', 'Authorization' => "Bearer $token");
             
-            $url = 'https://webradio-stream.herokuapp.com/authorized/users/logged';
+            $url = 'https://webradio-stream.herokuapp.com/authorized/radios/all';
  
             $response = Unirest\Request::get($url,$headers);
  
@@ -48,6 +46,4 @@ class ProfilController extends BaseController
             
         }
     }
-
-    
 }
