@@ -10,93 +10,41 @@
 <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
 <script src="{{ asset('js/mainJs/index.js') }}"></script>
 
-<!-- facebook -->
-<div id="fb-root"></div>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v6.0&appId=1268121773351660&autoLogAppEvents=1">
-</script>
-
 <script>
-
-$(document).ready(function() {
     
     let track =  document.getElementById("track");
     
-    function playPause1 () {
+    function playPause () {
 
         if(track.paused) {
 
             track.play();
-            $("#play-pause1").addClass('pause');
+            $("#play-pause").addClass('pause');
         }else {
             track.pause();
-            $("#play-pause1").removeClass('pause');
+            $("#play-pause").removeClass('pause');
         }
     } 
 
-    function playPause2 () {
-
-        if(track.paused) {
-
-            track.play();
-            $("#play-pause2").addClass('pause');
-        }else {
-            track.pause();
-            $("#play-pause2").removeClass('pause');
-        }
-    }  
-
-    function playPause3 () {
-
-        if(track.paused) {
-
-            track.play();
-            $("#play-pause3").addClass('pause');
-        }else {
-            track.pause();
-            $("#play-pause3").removeClass('pause');
-        }
-    }
-
-        function playPause4 () {
-
-        if(track.paused) {
-
-            track.play();
-            $("#play-pause4").addClass('pause');
-        }else {
-            track.pause();
-            $("#play-pause4").removeClass('pause');
-        }
-    }
-
-     $('#play-pause1').click(function() {
+     $('#play-pause').click(function() {
         playPause1();
     });
 
-     $('#play-pause2').click(function() {
-        playPause2();
-    });
+    
 
-     $('#play-pause3').click(function() {
-        playPause3();
-    });
 
-     $('#play-pause4').click(function() {
-        playPause4();
-    });
-});
-</script>
-<script>
 $(document).ready(function() {
 
     let store = true;
     const token = localStorage.getItem("token");
 
+    
+
     if(token !== ""){
 
         $.ajax({
             type: "POST", 
-            url: "/profile/show", 
+            url: "/radios/show", 
             data: JSON.stringify({
                 "token": token,
             }),
@@ -104,11 +52,16 @@ $(document).ready(function() {
             async: true,
             success: function(response) {
 
-                if(response != undefined){
+                /*if(response != undefined){
                     $('#myname').html(response.user[0].username);
                     $('#logo-setting').attr('src', user.user[0].avatar);
-                }
-                console.log(response);
+                }*/
+                console.log(response.radios[0]);
+                myradio = response.radios[0];
+
+                    let mytab = "<tr><td><img class='img-radio' src='"+myradio.logo+"' alt=''></td><td>"+myradio.radio_name+"</td><td><audio class='myaudio' id='track'><source src='"+myradio.direct_url+"' type='audio/mp3' />Rien</audio><div id='player-container'><div id='play-pause' class='play'>Play</div></div></td></tr>";
+                    
+                    $("#list-radio").html(mytab);
                 
             },
             error: function (err) {
@@ -117,6 +70,7 @@ $(document).ready(function() {
             }
         });
     }else{
+    
         store = false;
         localStorage.removeItem('token');
 
@@ -125,16 +79,6 @@ $(document).ready(function() {
         console.log("Vous êtes deconnecté");
     }
 
-    $('#deconnecter').click(function(e){
-        
-        if(token !== null){
-
-            store = false;
-            localStorage.removeItem('token');
-            console.log("Vous êtes deconnecté");
-        }
-        
-    });
  
 });
 </script>

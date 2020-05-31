@@ -1,32 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-    {% include 'Users/head.html.twig' %}
+    {% include 'users/head.html.twig' %}
 <body id="page-top">
 
 <!-- Page Wrapper -->
 <div id="wrapper">
-    {% include 'Users/sidebar.html.twig' %}
+    {% include 'users/sidebar.html.twig' %}
         <!-- Main Content -->
         <div id="content">
-            {% include 'Users/navigation.html.twig' %}
+            {% include 'users/navigation.html.twig' %}
             <!-- Begin Page Content -->
         
             <div class="jumbotron pt-0">
                 <div class="container">
 
-                    {{ form_start(radioform) }}
                     <div class="conteneur d-flex flex-column align-items-center justify-content-center">
                         <div class="row recherche">
                             <div class="col">
                                 <div class="form-group has-search ">
-                                    <button class="fa fa-search form-control-feedback"></button>
-                                    {{ form_row(radioform.nameRadio) }}  
+                                    <span class="fa fa-search form-control-feedback"></span>
+                                    <input type="text" class="form-control text-dark" placeholder="Rechercher une radio"> 
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {{ form_end(radioform) }}
-
+                    
                     <div class="row">
                         <div class="col ml-auto mr-auto">
                             <!--titre -->
@@ -40,21 +38,21 @@
                     <div class="row col">
                         <table id='tabAccueil' class='border0 tabAccueil'>
                             <tbody id="list-radio" class="accueilTab">
-                                {% for radio in radios %}
-                                <tr>
+                                
+                                <!--<tr>
                                     <td>
-                                        <img class='img-radio' src="{{ radio.avatar }}" alt="radio.{{radio.id}}">
+                                        <img class='img-radio' src='' alt=''>
                                     </td>
-                                    <td>{{ radio.nameRadio }}</td>
+                                    <td></td>
                                     <td>
                                         <audio class='myaudio' id='track'>
-                                            <source src="{{ radio.urlRadio }}" type='audio/mp3' />Rien</audio>
+                                            <source src="" type='audio/mp3' />Rien</audio>
                                             <div id='player-container'>
-                                                <div id='play-pause{{loop.index}}' class='play'>Play</div>
+                                                <div id='play-pause' class='play'>Play</div>
                                             </div>
                                     </td>
-                                </tr>
-                                    {% endfor %}
+                                </tr>-->
+                                    
                             </tbody>
                         </table>
                     </div>
@@ -82,7 +80,7 @@
     <i class="fas fa-angle-up"></i>
 </a>
 
-{% include 'Users/Radios/script.html.twig' %}
+{% include 'users/radios/script.html.twig' %}
 
 </body>
 

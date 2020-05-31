@@ -37,8 +37,8 @@ $(document).ready(function() {
             success: function(response) {
 
                 if(response != undefined){
-                    $('#myname').html(response.user[0].username);
-                    $('#logo-setting').attr('src', user.user[0].avatar);
+                   $('#myname').html(response.user[0].username);
+                    $('#logo-setting').attr('src', response.user[0].avatar);
                 }
                 console.log(response);
                 

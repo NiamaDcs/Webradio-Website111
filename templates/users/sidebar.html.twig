@@ -2,7 +2,7 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{#{ path('profile.setting.index') }#}">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ path('setting.index') }}">
         <div class="sidebar-brand-text mx-2" id="myname"> {#{ user.username }#}</div>
         <i class="fas fa-fw far fa-edit" id="edit-profil"></i>
     </a>
@@ -31,7 +31,7 @@
     </li>
     <!-- Nav Item - radios -->
     <li class="nav-item active d-flex align-items-center justify-content-center">
-        <a class="nav-link d-flex align-items-center justify-content-center" href="{#{ path('radio.index') }#}">
+        <a class="nav-link d-flex align-items-center justify-content-center" href="{{ path('radios.index') }}">
             <span>Radios</span>
         </a>
     </li>

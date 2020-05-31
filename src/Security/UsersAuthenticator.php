@@ -47,7 +47,7 @@ class UsersAuthenticator extends AbstractFormLoginAuthenticator
 
     public function supports(Request $request)
     {
-        return 'home.index' === $request->attributes->get('_route')
+        return 'interne.login' === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
 
@@ -56,7 +56,6 @@ class UsersAuthenticator extends AbstractFormLoginAuthenticator
         $credentials = [
             'email' => $request->request->get('_username'),
             'password' => $request->request->get('_password'),
-            'csrf_token' => $request->request->get('_csrf_token'),
             'api_token' => $request->request->get('api_token'),
         ];
         $request->getSession()->set(
@@ -69,10 +68,7 @@ class UsersAuthenticator extends AbstractFormLoginAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        $token = new CsrfToken('authenticate', $credentials['csrf_token']);
-        if (!$this->csrfTokenManager->isTokenValid($token)) {
-            throw new InvalidCsrfTokenException();
-        }
+        $token = $credentials['api_token'];
 
         // Load / create our user however you need.
         // You can do this by calling the user provider, or with custom logic here.

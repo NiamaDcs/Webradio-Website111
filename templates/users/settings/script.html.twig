@@ -1,9 +1,5 @@
-
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-
 
 <!-- Core plugin JavaScript-->
 <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
@@ -15,16 +11,75 @@
 <!-- Custom scripts for all pages-->
 <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
 <script src="{{ asset('js/mainJs/index.js') }}"></script>
-<script>
 
+<script src="{{ asset('js/mainJs/index.js') }}"></script>
+
+<script>
 $(document).ready(function() {
 
+    const reset = () => {
+        $(".btn_submit").attr("disabled", false);
+        $(".btn_submit").css("background-color", "#EF0051");
+        $(".btn_submit").hover(() => { $(".btn_submit").css("background-color", "#D31052") })
+    };
+
+    const disable = () => {
+        $(".btn_submit").attr("disabled", true);
+        $(".btn_submit").css("background-color", "gray");
+    }
+
+    let user = {};
+    let channel = {};
+    let downloadURLUser;
+
+    let store = true;
+    
+    const token = localStorage.getItem("token");
+
+    if(token !== ""){
+
+        $.ajax({
+            type: "POST", 
+            url: "/profile/show", 
+            data: JSON.stringify({
+                "token": token,
+            }),
+            dataType: 'json',
+            async: true,
+            success: function(response) {
+
+                if(response != undefined){
+                    $('#myname').html(response.user[0].username);
+                    $('#logo-setting').attr('src', response.user[0].avatar);
+
+                    $('#username').attr('value', response.user[0].username);
+                    $('#profil').attr('src', response.user[0].avatar);
+                }
+                console.log(response);
+                user = response;
+            },
+            error: function (err) {
+                
+                console.log(err);
+            }
+        });
+    }else{
+        store = false;
+        localStorage.removeItem('token');
+
+         window.location.href = '/';
+
+        console.log("Vous êtes deconnecté");
+    }
+   
+
+
     let firebaseConfig;
-    let downloadUrl;
+
 
     $.ajax({
     method: "GET", 
-    url: "/profile/firebase", 
+    url: "/firebase", 
     async: true,
     success: function(data) {
     //console.log(data.apiKey+" "+data.authDomain+" "+data.databaseURL+" "+data.projectId+" "+data.storageBucket);
@@ -37,147 +92,159 @@ $(document).ready(function() {
             storageBucket: data.storageBucket
         };
 
-
         firebase.initializeApp(firebaseConfig);
 
-        // On détecte le changement de fichier
+     // changement input
         $('#cameraInput').on('change', function() {
-            // On récupère le nouveau fichier
+             let userId = user.user[0].user_id;
             let selectedFile = event.target.files[0];
 
-        
             let filename = $('#cameraInput').val().replace(/C:\\fakepath\\/i, '');
-            let storageRef = firebase.storage().ref('/User/{{ app.user.id }}' + filename);
+            let storageRef = firebase.storage().ref('/User/'+userId+ filename);
 
-            // On envoi le fichier à Firebase
             let upload = storageRef.put(selectedFile);
 
-            // Le traitement Firebase se fait ici
             upload.on('state_changed', function(snapshot) {
 
             }, function(error) {
-                // Si Firebase renvoi une error on l'a met ici
                 console.log(error)
             }, function() {
-                // On récupère l'URL téléchargeable
-                downloadUrl = upload.snapshot.downloadURL;
-                // On l'affiche
-                 console.log(downloadUrl);
-            
-                // On remplace l'URL de l'image par la nouvelle
-                    $('#profil').attr('src', downloadUrl);
-                    $('#logo-setting').attr('src', downloadUrl)
+                downloadURLUser = upload.snapshot.downloadURL;
+                $('#profil').attr('src', downloadURLUser);
+            });
+        }); // camera
 
 
-                        $('#envoyer').click(function(e){
-                            e.preventDefault();
-                            console.log(downloadUrl)
 
-                             let username = $('#username').val();
+        $('#update_user').click(function(e) {
+            e.preventDefault();
+            disable();
+            let downloadURL
+            let usernameShow = $('#username').val();
+            let idUser = user.user[0].user_id;
+            let profil = $('#profil').attr('src');
+            console.log(profil)
+            if(downloadURLUser ===""){
+                downloadURL = profil;
+            }else {
+                downloadURL = downloadURLUser;
+            }
 
-                                 $(".erreur").remove();
+           let data = JSON.stringify({tokenUser:token , username: usernameShow, avatar: profil, userId:idUser});
+            $.ajax({
+                type: "POST", 
+                url: "/profile/setting/show", 
+                data: data,
+                dataType: 'json',
+                async: true,
+                success: function(response) {
+                    reset();
+                    if(response != undefined){
+                        /*$('#username').attr('value', response.user[0].username);
+                        $('#profil').attr('src', response.user[0].avatar);*/
+                    }
+                    console.log(response);
+                
+                },
+                error: function (err) {
+                    
+                    console.log(err);
+                }
+            });
 
-                                if (username.length < 3) 
-                                {
-                                    $('#username').after('<div class="erreur text-dark medium" style="font-size: small; margin-top: 10px;">Le nom d\'utilisateur doit être de 3 caractères minimum et ne peux pas contenir d\'espace</div>'); 
-                                }else if(username.length > 10)
-                                {
-                                    $('#username').after('<div class="erreur text-dark medium" style="font-size: small; margin-top: 10px;">Le nom d\'utilisateur doit être  moins de 10 caractères</div>');
-                                }
-    
+        }); // setting user
 
-                            $.ajax({
-                                    type: "POST", 
-                                    url: "/profile/setting/{{app.user.id}}", 
-                                    data: JSON.stringify({
-                                        "downloadUrl": downloadUrl,
-                                        "username": username,
-                                    }),
-                                    async: true,
-                                    success: function(responseText) {
-                                        console.log('ici succ');
-                                    },
-                                    error: function (error) {
-                                        console.log(error);
-                                    }
-                            });
 
-                        });  
 
-                        $('#channelSave').click(function(e) {
-                            e.preventDefault();
-                            console.log(downloadUrl)
+        //changer de avatar
+        $('#cameraInputChannel').on('change', function() {
+            let selectedFileChannel = event.target.files[0];
 
-                            let channels = $('#channels').val();
+            let filenameChannel = $('#cameraInputChannel').val().replace(/C:\\fakepath\\/i, '');
+            let storageRefChannel = firebase.storage().ref('/Channel/' + filenameChannel);
 
-                                 $(".erreur").remove();
+            let upload = storageRefChannel.put(selectedFileChannel);
 
-                                if (channels.length < 3) 
-                                {
-                                    $('#channels').after('<div class="erreur text-dark medium" style="font-size: small; margin-top: 10px;">Le nom d\'utilisateur doit être de 3 caractères minimum et ne peux pas contenir d\'espace</div>'); 
-                                }else if(channels.length > 10)
-                                {
-                                    $('#channels').after('<div class="erreur text-dark medium" style="font-size: small; margin-top: 10px;">Le nom d\'utilisateur doit être  moins de 10 caractères</div>');
-                                }
+            upload.on('state_changed', function(snapshot) {
 
-                                if(channels.length > 3)
-                                {
-                                    $.ajax({
-                                        type: "POST", 
-                                        url: "/profile/setting/channel/{{app.user.id}}", 
-                                        data: JSON.stringify({
-                                            "downloadUrl": downloadUrl,
-                                            "channels": channels,
-                                        }),
-                                        async: true,
-                                        success: function(responseText) {
-                                            console.log('ici succès');
-                                            $('avatarChannel').attr('src', downloadUrl)
-                                            $('#mychannels').css("display", "block");
-                                        },
-                                        error: function (error) {
-                                            console.log(error);
-                                        }
-                                    }); 
-                                }
+            }, function(error) {
+                console.log(error)
+            }, function() {
+                downloadURLChannel = upload.snapshot.downloadURL;
+                $('#avatarChannel').attr('src', downloadURLChannel);
+            });
+        });
 
-                        });  
+        //update channel
+        $("#channelSave").click((e) => {
+            e.preventDefault(); 
+            disable();
 
-            });// i
+            let name = $('#channels').val();
+            let channelId = channel.channel._id;
+            let avatar = $('#avatarChannel').attr('src');
+            let downloadURLChannel = avatar;
+
+            $.ajax({
+                type: "POST", 
+                url: "/myChannel", 
+                data: JSON.stringify({
+                    "token": token,
+                    "downloadURLChannel": downloadURLChannel,
+                    "name": name
+                }),
+                dataType: 'json',
+                async: true,
+                success: function(response) {
+                    reset();
+                    if(response != undefined){
+                       /* $('#channels').html(response.user[0].username);
+                        $('#avatarChannel').attr('src', response.user[0].avatar);*/
+                    }
+                    console.log(response);
+                
+                },
+                error: function (err) {
+                    
+                    console.log(err);
+                }
+            });
         });
 
     }
 
-    /*$('#savePassword').click(function(e) {
-    e.preventDefault();
+    }); // fin ajax firebase config
+
+        //update password
+        $("#savePassword").click((e) => {
+            e.preventDefault(); 
+            disable();
+
             let password = $('#password').val();
 
-        if(password.length < 8) {
-            $('#password').after('<div class="erreur text-dark medium" style="font-size: small; margin-top: 10px;">Merci de rentrer un mot de passe de 8 caractères minimum</div>');
-        }
-    
-        if(password.length > 8)
-        {
             $.ajax({
                 type: "POST", 
-                url: "/profile/setting/password/{{app.user.id}}", 
+                url: "/mypassword", 
                 data: JSON.stringify({
+                    "token": token,
                     "password": password,
                 }),
+                dataType: 'json',
                 async: true,
-                success: function(responseText) {
-                    console.log('ici succès');
-                    
-                    $('#mypassword').css("display", "block");
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            }); 
-        }
-});   */
+                success: function(response) {
 
-});
-    
+                    if(response != undefined){
+                       /* $('#password').html(response.user[0].password);*/
+                    }
+                    console.log(response);
+                
+                },
+                error: function (err) {
+                    
+                    console.log(err);
+                }
+            });
+        });
+        
 });
 </script>

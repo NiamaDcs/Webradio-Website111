@@ -44,57 +44,11 @@ $(document).ready(function() {
         }
     } //fin 1
 
-    function playPause2 () {
-
-        if(track.paused) {
-
-            track.play();
-            $("#play-pause2").addClass('pause');
-        }else {
-            track.pause();
-            $("#play-pause2").removeClass('pause');
-        }
-    }  //fin 2
-
-    function playPause3 () {
-
-        if(track.paused) {
-
-            track.play();
-            $("#play-pause3").addClass('pause');
-        }else {
-            track.pause();
-            $("#play-pause3").removeClass('pause');
-        }
-    } //fin 3
-
-    function playPause4 () {
-
-        if(track.paused) {
-
-            track.play();
-            $("#play-pause4").addClass('pause');
-        }else {
-            track.pause();
-            $("#play-pause4").removeClass('pause');
-        }
-    } //fin 4
-
     $('#play-pause1').click(function() {
         playPause1();
     });// cli 1
 
-    $('#play-pause2').click(function() {
-        playPause2();
-    });  // cli 2
-
-    $('#play-pause3').click(function() {
-        playPause3();
-    }); // cli 3
-
-     $('#play-pause4').click(function() {
-        playPause4();
-    });// cli 4
+    
 
 });
 
@@ -225,7 +179,8 @@ function inputPassword(inputData, input){
                         
                          localStorage.setItem("token", response.message.token);
                          // modal show connexion
-                    } 
+                    }
+                    
                     else console.log('failed');
                     console.log(response);
                    
