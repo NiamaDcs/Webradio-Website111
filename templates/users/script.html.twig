@@ -24,9 +24,68 @@ $(document).ready(function() {
     let store = true;
     const token = localStorage.getItem("token");
 
-    if(token !== ""){
 
+        /*if(token !== "") {
+        let username     =  localStorage.getItem("username");
+        let userAvatar   =  localStorage.getItem("avatar");
+        let userPassword =  localStorage.getItem("password");
+        let userId       =  localStorage.getItem("userId");
+        let channelId    =  localStorage.getItem("channelId");
+        let status       =  localStorage.getItem("status");
+
+        $('#myname').html(username);
+        $('#logo-setting').attr('src', userAvatar);
+        $('#username').attr('value', username);
+        $('#profil').attr('src', userAvatar);
+        $('#password').attr('src', userPassword);
+        $('#status').html(status);
+    }*/
+
+
+    if(token !== "")
+    {
+        let channelId = localStorage.getItem("channelId");
+        channelId = channelId;
+        let data = JSON.stringify({tokenChan: token, Idchannel: channelId});
+
+        //channel
         $.ajax({
+            type: "POST", 
+            url: "/profile/channel/show", 
+            data: data,
+            dataType: 'json',
+            async: true,
+            success: function(response) {
+
+                if(response != undefined){
+
+                    localStorage.setItem("nbr_ecoute", response.channel.nbr_ecoute);
+                    localStorage.setItem("nbr_ecoute_global", response.channel.nbr_ecoute_global);
+
+                    let nbrEcoute = localStorage.getItem("nbr_ecoute");
+                    let nbEcouteGlobal = localStorage.getItem("nbr_ecoute_global");
+
+                    $('#nbPlaning').html(nbrEcoute);
+                    $('#ecouteGlobal').html(nbEcouteGlobal);
+                    $('#nbFavoris').html(nbrEcoute);
+                    $('#nbStream').html(nbrEcoute);
+                }
+                console.log(response);
+                channel = response;
+            },
+            error: function (err) {
+                
+                console.log(err);
+            }
+        });
+    }
+
+
+
+
+
+
+        /*$.ajax({
             type: "POST", 
             url: "/profile/show", 
             data: JSON.stringify({
@@ -55,7 +114,9 @@ $(document).ready(function() {
          window.location.href = '/';
 
         console.log("Vous êtes deconnecté");
-    }
+    }*/
+
+
 
     $('#deconnecter').click(function(e){
         

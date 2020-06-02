@@ -12,25 +12,55 @@
 
 <script>
     
-    let track =  document.getElementById("track");
     
-    function playPause () {
+    /*function playPause1 () {
 
         if(track.paused) {
 
             track.play();
-            $("#play-pause").addClass('pause');
+            $("#play-pause1").addClass('pause');
         }else {
             track.pause();
-            $("#play-pause").removeClass('pause');
+            $("#play-pause1").removeClass('pause');
         }
     } 
 
-     $('#play-pause').click(function() {
+     $('#play-pause1').click(function() {
         playPause1();
-    });
+    }); //play1
 
-    
+    function playPause2 () {
+
+        if(track.paused) {
+
+            track.play();
+            $("#play-pause2").addClass('pause');
+        }else {
+            track.pause();
+            $("#play-pause2").removeClass('pause');
+        }
+    } 
+
+     $('#play-pause2').click(function(e) {
+        playPause2();
+    }); //play2
+
+    function playPause3 () {
+
+        if(track.paused) {
+
+            track.play();
+            $("#play-pause3").addClass('pause');
+        }else {
+            track.pause();
+            $("#play-pause3").removeClass('pause');
+        }
+    } 
+
+     $('#play-pause3').click(function(e) {
+         console.log("play3");
+        playPause3();
+    }); //play3 */
 
 
 $(document).ready(function() {
@@ -52,16 +82,23 @@ $(document).ready(function() {
             async: true,
             success: function(response) {
 
-                /*if(response != undefined){
-                    $('#myname').html(response.user[0].username);
-                    $('#logo-setting').attr('src', user.user[0].avatar);
-                }*/
-                console.log(response.radios[0]);
-                myradio = response.radios[0];
+                if(response != undefined){
+                    /*$('#myname').html(response.user[0].username);
+                    $('#logo-setting').attr('src', user.user[0].avatar);*/
 
-                    let mytab = "<tr><td><img class='img-radio' src='"+myradio.logo+"' alt=''></td><td>"+myradio.radio_name+"</td><td><audio class='myaudio' id='track'><source src='"+myradio.direct_url+"' type='audio/mp3' />Rien</audio><div id='player-container'><div id='play-pause' class='play'>Play</div></div></td></tr>";
-                    
+                     myradio = response.radios[0];
+                      let mytab;
+
+                    for(let i=0; i<4; i++) {
+
+                        mytab += "<tr><td><img class='img-radio' src='"+response.radios[i].logo+"' alt=''></td><td style='color: black;'>"+response.radios[i].radio_name+"</td><td><audio class='myaudio' id='track'><source src='"+response.radios[i].Stream.direct_url+"' type='audio/mp3' />Rien</audio><div id='player-container'><div id='play-pause"+i+"' class='play'>Play</div></div></td></tr>";
+                        
+                    }
                     $("#list-radio").html(mytab);
+
+                }
+                console.log(response);
+               
                 
             },
             error: function (err) {
@@ -79,6 +116,22 @@ $(document).ready(function() {
         console.log("Vous êtes deconnecté");
     }
 
- 
+    let track =  document.getElementById("track");
+
+    function playPause0 () {
+
+        if(track.paused) {
+
+            track.play();
+            $("#play-pause0").addClass('pause');
+        }else {
+            track.pause();
+            $("#play-pause0").removeClass('pause');
+        }
+    } 
+
+     $('#play-pause0').click(function() {
+        playPause0();
+    }); //play0
 });
 </script>

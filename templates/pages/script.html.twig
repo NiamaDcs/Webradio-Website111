@@ -21,13 +21,36 @@ $(document).ready(function() {
     let store = true;
     const token = localStorage.getItem("token");
 
+    let username =  localStorage.getItem("username");
+    let avatar   =  localStorage.getItem("avatar");
+    let password =  localStorage.getItem("password");
+    let userId   =  localStorage.getItem("userId"); 
+    let channelId = localStorage.getItem("channelId");
+
     if(token !== null ) {
 
-        localStorage.removeItem('token');
+        localStorage.removeItem('token'); 
+
         console.log('Vous êtes deconnecté');
         store = false;
     }
-        
+
+    if(username !== null) {
+        localStorage.removeItem("username");
+    }
+    if(avatar !== null) {
+        localStorage.removeItem("avatar");
+    }
+    if(password !== null){
+        localStorage.removeItem("password");
+    }
+    if(userId !== null){
+        localStorage.removeItem("userId"); 
+    }
+    if(channelId !== null){
+        localStorage.removeItem("channelId");
+    }
+   
     
     let track =  document.getElementById("track");
    
@@ -176,7 +199,6 @@ function inputPassword(inputData, input){
                     reset();
                     if(response.message != undefined)
                     {
-                        
                          localStorage.setItem("token", response.message.token);
                          // modal show connexion
                     }
@@ -207,6 +229,7 @@ function inputPassword(inputData, input){
         e.preventDefault(); 
         disable();
 
+        let mytoken;
         let emailLogin = $("#login_email").val();
         let inpEmail = $("#login_email");
 
@@ -235,8 +258,69 @@ function inputPassword(inputData, input){
 
                         $('#login-success').css("display", "block");
                         $('#login-success').html("L'affichage de votre profile peut prendre du temps à arriver. Si rien ne se passe, attendez quelques secondes");
+                        mytoken = response.message.token;
 
-                        window.location.href = '/profile';
+                        //get profile
+                        let data1 = JSON.stringify({ token1: mytoken,});
+                            $.ajax({
+                                type: "POST", 
+                                url: "/profile/show", 
+                                data: data1,
+                                dataType: 'json',
+                                async: true,
+                                success: function(responsepro) {
+
+                                    if(response != undefined){
+
+                                        localStorage.setItem("username", responsepro.user[0].username);
+                                        localStorage.setItem("avatar", responsepro.user[0].avatar);
+                                        localStorage.setItem("password", responsepro.user[0].password);
+                                        localStorage.setItem("userId", responsepro.user[0].user_id); 
+                                        localStorage.setItem("channelId", responsepro.user[0].channel_id); 
+                                        localStorage.setItem("status", responsepro.user[0].status);
+
+                                        let role = responsepro.user[0].role;
+                                    if(role === "ROLE_SUPER_ADMIN")
+                                    {
+                                            setTimeout(function(){
+
+                                                window.location.href = "/";
+
+                                            }, 2000);
+
+                                    }else if(role === "ROLE_ADMIN"){
+
+                                            setTimeout(function(){
+
+                                                window.location.href = "/";
+
+                                            }, 2000);
+
+                                    }else if(role === "ROLE_USER"){
+
+                                            setTimeout(function(){
+
+                                                window.location.href = "/profile";
+
+                                            }, 2000);
+
+                                    }else{
+
+                                            setTimeout(function(){
+
+                                                window.location.href = "/";
+
+                                            }, 2000);
+                                    }
+                                    }
+                                    console.log(responsepro);
+                                },
+                                error: function (err) {
+                                    
+                                    console.log(err);
+                                }
+                            });
+
                     }
                     else console.log('failed');
 
@@ -253,9 +337,12 @@ function inputPassword(inputData, input){
 
             console.log('les données entrées sont invalides!!');
         }
+
+
     });// login
 
 
+    
 
 
 

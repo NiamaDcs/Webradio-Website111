@@ -33,7 +33,7 @@ class ProfilController extends BaseController
             $content = $request->getContent();
 
             $params = json_decode($content, true);
-            $token = $params['token'];
+            $token = $params['token1'];
 
             $headers = array('Accept' => 'application/json', 'Authorization' => "Bearer $token");
             
@@ -67,9 +67,9 @@ class ProfilController extends BaseController
 
             
             $params = json_decode($content, true);
-            dump($params);
+            
             $token = $params['tokenUser'];
-            $userId = $params['userId'];
+            $userId = $params['idUser'];
             $username = $params['username'];
             $avatar = $params['avatar'];
 
@@ -78,15 +78,15 @@ class ProfilController extends BaseController
             $headers = array('Accept' => 'application/json', 'Authorization' => "Bearer $token");
             $query = array('avatar' => $avatar,'username' => $username);
 
-            /*$url = "https://webradio-stream.herokuapp.com/authorized/users/$userId";
+            $url = "https://webradio-stream.herokuapp.com/authorized/users/$userId";
             $body = Unirest\Request\Body::form($query);
 
             $response = Unirest\Request::put($url,$headers,$body);
  
           // $result = $response->raw_body; return $this->redirectToRoute('profile.setting.index');
             
-          $result = $response->raw_body; */
-          return new Response(json_encode($query), 201);
+          $result = $response->raw_body; 
+          return new Response($result, 201);
             
         }
     }
@@ -101,7 +101,7 @@ class ProfilController extends BaseController
 
             $params = json_decode($content, true);
             $token = $params['token'];
-            $userId = $params[''];
+            $userId = $params['idUser'];
             $password = $params['password'];
 
             $headers = array('Accept' => 'application/json', 'Authorization' => "Bearer $token");
@@ -122,6 +122,34 @@ class ProfilController extends BaseController
     }
 
     /**
+     * @Route("/channel/show", name="channel.index", methods={"POST"})
+     */
+    public function dataChannel(Request $request) :Response
+    {
+        if($request->isXmlHttpRequest()){
+            $content = $request->getContent();
+
+            $params = json_decode($content, true);
+
+            $token = $params['tokenChan'];
+            $channelId = $params['Idchannel'];
+        
+            $headers = array('Accept' => 'application/json', 'Authorization' => "Bearer $token");
+            
+    
+            $url = "https://webradio-stream.herokuapp.com/authorized/channels/$channelId";
+ 
+            $response = Unirest\Request::get($url,$headers);
+ 
+             
+          $result = $response->raw_body; 
+          return new Response($result, 201);
+            
+        } 
+    }
+
+
+    /**
      * @Route("/myChannel", name="myChannel.index", methods={"POST"})
      */
     public function myChannel(Request $request) :Response
@@ -131,9 +159,9 @@ class ProfilController extends BaseController
 
             $params = json_decode($content, true);
             $token = $params['token'];
-            $channelId = $params[''];
+            $channelId = $params['channelId'];
             $name = $params['name'];
-            $avatar = $params['downloadURLChannel'];
+            $avatar = $params['avatar'];
 
 
             $headers = array('Accept' => 'application/json', 'Authorization' => "Bearer $token");

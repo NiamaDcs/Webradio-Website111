@@ -360,7 +360,7 @@ a.btn.bouton-password{color: white; box-shadow: 0 6px 10px 0 #0000001a,0 1px 18p
     transition: transform 0.3s;
 }
 
-#player-container #play-pause4 {
+#player-container #play-pause0 {
     cursor: pointer;
     text-indent: -999999px;
     height:70px;
@@ -397,10 +397,10 @@ a.btn.bouton-password{color: white; box-shadow: 0 6px 10px 0 #0000001a,0 1px 18p
     background-image: url('../assets/pause.png') !important;
 }
 
-#play-pause4.play {
+#play-pause0.play {
     background-image: url('../assets/play.png');
 }
-#play-pause4.pause {
+#play-pause0.pause {
     background-image: url('../assets/pause.png') !important;
 }
 

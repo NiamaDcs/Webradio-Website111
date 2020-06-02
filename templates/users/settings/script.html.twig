@@ -28,50 +28,26 @@ $(document).ready(function() {
         $(".btn_submit").css("background-color", "gray");
     }
 
-    let user = {};
+    let users = {};
     let channel = {};
     let downloadURLUser;
+    
 
     let store = true;
     
-    const token = localStorage.getItem("token");
+    const token      =  localStorage.getItem("token");
+    let username     =  localStorage.getItem("username");
+    let userAvatar   =  localStorage.getItem("avatar");
+    let userPassword =  localStorage.getItem("password");
+    let userId       =  localStorage.getItem("userId");
+    let channelId    =  localStorage.getItem("channelId");
+    let status       =  localStorage.getItem("status");
 
-    if(token !== ""){
-
-        $.ajax({
-            type: "POST", 
-            url: "/profile/show", 
-            data: JSON.stringify({
-                "token": token,
-            }),
-            dataType: 'json',
-            async: true,
-            success: function(response) {
-
-                if(response != undefined){
-                    $('#myname').html(response.user[0].username);
-                    $('#logo-setting').attr('src', response.user[0].avatar);
-
-                    $('#username').attr('value', response.user[0].username);
-                    $('#profil').attr('src', response.user[0].avatar);
-                }
-                console.log(response);
-                user = response;
-            },
-            error: function (err) {
-                
-                console.log(err);
-            }
-        });
-    }else{
-        store = false;
-        localStorage.removeItem('token');
-
-         window.location.href = '/';
-
-        console.log("Vous êtes deconnecté");
-    }
    
+    $('#username').attr('value', username);
+    $('#profil').attr('src', userAvatar);
+    $('#password').attr('value', userPassword);
+    
 
 
     let firebaseConfig;
@@ -96,7 +72,7 @@ $(document).ready(function() {
 
      // changement input
         $('#cameraInput').on('change', function() {
-             let userId = user.user[0].user_id;
+             
             let selectedFile = event.target.files[0];
 
             let filename = $('#cameraInput').val().replace(/C:\\fakepath\\/i, '');
@@ -117,20 +93,15 @@ $(document).ready(function() {
 
 
         $('#update_user').click(function(e) {
+
             e.preventDefault();
             disable();
             let downloadURL
             let usernameShow = $('#username').val();
-            let idUser = user.user[0].user_id;
             let profil = $('#profil').attr('src');
             console.log(profil)
-            if(downloadURLUser ===""){
-                downloadURL = profil;
-            }else {
-                downloadURL = downloadURLUser;
-            }
-
-           let data = JSON.stringify({tokenUser:token , username: usernameShow, avatar: profil, userId:idUser});
+          
+           let data = JSON.stringify({tokenUser:token , username: usernameShow, avatar: profil, idUser: userId});
             $.ajax({
                 type: "POST", 
                 url: "/profile/setting/show", 
@@ -140,14 +111,15 @@ $(document).ready(function() {
                 success: function(response) {
                     reset();
                     if(response != undefined){
-                        /*$('#username').attr('value', response.user[0].username);
-                        $('#profil').attr('src', response.user[0].avatar);*/
+                        //rep mise a jour 
+                        $('#mycompte').html(response.message);
+                        $('#mycompte').css("display","block");
                     }
                     console.log(response);
                 
                 },
                 error: function (err) {
-                    
+                    reset();
                     console.log(err);
                 }
             });
@@ -156,12 +128,49 @@ $(document).ready(function() {
 
 
 
+        if(token !== "")
+        {
+            channelId = channelId;
+            let data = JSON.stringify({tokenChan: token, Idchannel: channelId});
+
+            //channel
+            $.ajax({
+                type: "POST", 
+                url: "/profile/channel/show", 
+                data: data,
+                dataType: 'json',
+                async: true,
+                success: function(response) {
+
+                    if(response != undefined){
+
+                        localStorage.setItem("channel_name", response.channel.channel_name);
+                        localStorage.setItem("channel_avatar", response.channel.avatar);
+
+                        let channelName = localStorage.getItem("channel_name");
+                        let channelAvatar = localStorage.getItem("channel_avatar");
+
+                        $('#channels').attr('value', channelName);
+                        $('#avatarChannel').attr('src', channelAvatar);
+                    }
+                    console.log(response);
+                    channel = response;
+                },
+                error: function (err) {
+                    
+                    console.log(err);
+                }
+            });
+        }
+
+
+
         //changer de avatar
         $('#cameraInputChannel').on('change', function() {
             let selectedFileChannel = event.target.files[0];
 
             let filenameChannel = $('#cameraInputChannel').val().replace(/C:\\fakepath\\/i, '');
-            let storageRefChannel = firebase.storage().ref('/Channel/' + filenameChannel);
+            let storageRefChannel = firebase.storage().ref('/Channel/'+channelId+filenameChannel);
 
             let upload = storageRefChannel.put(selectedFileChannel);
 
@@ -181,31 +190,34 @@ $(document).ready(function() {
             disable();
 
             let name = $('#channels').val();
-            let channelId = channel.channel._id;
+            let idChannel = channel.channel._id;
             let avatar = $('#avatarChannel').attr('src');
             let downloadURLChannel = avatar;
 
             $.ajax({
                 type: "POST", 
-                url: "/myChannel", 
+                url: "/profile/myChannel", 
                 data: JSON.stringify({
                     "token": token,
-                    "downloadURLChannel": downloadURLChannel,
-                    "name": name
+                    "avatar": downloadURLChannel,
+                    "name": name,
+                    "channelId": idChannel,
+
                 }),
                 dataType: 'json',
                 async: true,
                 success: function(response) {
                     reset();
                     if(response != undefined){
-                       /* $('#channels').html(response.user[0].username);
-                        $('#avatarChannel').attr('src', response.user[0].avatar);*/
+                       
+                       $('#mychannels').html(response.message);
+                       $('#mychannels').css("display","block");
                     }
                     console.log(response);
                 
                 },
                 error: function (err) {
-                    
+                    reset();
                     console.log(err);
                 }
             });
@@ -224,23 +236,25 @@ $(document).ready(function() {
 
             $.ajax({
                 type: "POST", 
-                url: "/mypassword", 
+                url: "/profile/mypassword", 
                 data: JSON.stringify({
                     "token": token,
                     "password": password,
+                    "idUser": userId,
                 }),
                 dataType: 'json',
                 async: true,
                 success: function(response) {
-
+                    reset();
                     if(response != undefined){
-                       /* $('#password').html(response.user[0].password);*/
+                        $('#mypassword').html(response.message); 
+                        $('#mypassword').css("display","block");
                     }
                     console.log(response);
                 
                 },
                 error: function (err) {
-                    
+                    reset();
                     console.log(err);
                 }
             });
