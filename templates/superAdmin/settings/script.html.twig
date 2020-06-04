@@ -15,12 +15,45 @@
 
 $(document).ready(function() {
 
+    const reset = () => {
+        $(".btn_submit").attr("disabled", false);
+        $(".btn_submit").css("background-color", "#EF0051");
+        $(".btn_submit").hover(() => { $(".btn_submit").css("background-color", "#D31052") })
+    };
+
+    const disable = () => {
+        $(".btn_submit").attr("disabled", true);
+        $(".btn_submit").css("background-color", "gray");
+    }
+
+    let users = {};
+    let channel = {};
+    let downloadURLUser;
+    
+
+    let store = true;
+    
+    const token      =  localStorage.getItem("token");
+    let username     =  localStorage.getItem("username");
+    let userAvatar   =  localStorage.getItem("avatar");
+    let userPassword =  localStorage.getItem("password");
+    let userId       =  localStorage.getItem("userId");
+    let email        =  localStorage.getItem("email");
+
+   
+    $('#username').attr('value', username);
+    $('#profil').attr('src', userAvatar);
+    $('#password').attr('value', userPassword);
+    $('#email').attr('value', email);
+    
+
+
     let firebaseConfig;
-    let downloadUrl;
+
 
     $.ajax({
     method: "GET", 
-    url: "/superadmin/superadmin-firebase", 
+    url: "/firebase", 
     async: true,
     success: function(data) {
     //console.log(data.apiKey+" "+data.authDomain+" "+data.databaseURL+" "+data.projectId+" "+data.storageBucket);
@@ -33,123 +66,101 @@ $(document).ready(function() {
             storageBucket: data.storageBucket
         };
 
-
         firebase.initializeApp(firebaseConfig);
 
-        // On détecte le changement de fichier
+     // changement input
         $('#cameraInput').on('change', function() {
-            // On récupère le nouveau fichier
+             
             let selectedFile = event.target.files[0];
 
-        
             let filename = $('#cameraInput').val().replace(/C:\\fakepath\\/i, '');
-            let storageRef = firebase.storage().ref('/User/{{ app.user.id }}' + filename);
+            let storageRef = firebase.storage().ref('/User/'+userId+ filename);
 
-            // On envoi le fichier à Firebase
             let upload = storageRef.put(selectedFile);
 
-            // Le traitement Firebase se fait ici
             upload.on('state_changed', function(snapshot) {
 
             }, function(error) {
-                // Si Firebase renvoi une error on l'a met ici
                 console.log(error)
             }, function() {
-                // On récupère l'URL téléchargeable
-                downloadUrl = upload.snapshot.downloadURL;
-                // On l'affiche
-                 console.log(downloadUrl);
-            
-                // On remplace l'URL de l'image par la nouvelle
-                    $('#profil').attr('src', downloadUrl);
-                    $('#logo-setting').attr('src', downloadUrl)
-
-
-                        $('#button-settingsAdmin').click(function(e){
-                            e.preventDefault();
-                            console.log(downloadUrl)
-
-                             let username = $('#username').val().trim();
-                            let email = $('#email').val().trim();
-
-
-                                 $(".erreur").remove();
-
-                                if (username.length < 3) 
-                                {
-                                    $('#username').after('<div class="erreur text-dark medium" style="font-size: small; margin-top: 10px;">Le nom d\'utilisateur doit être de 3 caractères minimum et ne peux pas contenir d\'espace</div>'); 
-                                }else if(username.length > 10)
-                                {
-                                    $('#username').after('<div class="erreur text-dark medium" style="font-size: small; margin-top: 10px;">Le nom d\'utilisateur doit être  moins de 10 caractères</div>');
-                                }
-                                if (email.length < 1)
-                                {
-                                $('#email').after('<div class="erreur text-dark medium" style="font-size: small; margin-top: 10px;">Ce champ est obligatoire</div>'); 
-                                }else{
-                                    let regEx = /^[a-zA-Z0-9][a-zA-Z0-9._%+-]{0,63}@(?:[a-zA-Z0-9-]{1,63}\.){1,125}[a-zA-Z]{2,63}$/;
-                                    let validEmail = regEx.test(email);
-
-                                    if(!validEmail)
-                                    {
-                                        $('#email').after('<span class="erreur text-dark medium" style="font-size: small; margin-top: 10px;">Merci de rentrer une adresse email valide</span>');
-                                    }
-                                }
-
-                            $.ajax({
-                                    type: "POST", 
-                                    url: "/superadmin/setting/{{app.user.id}}", 
-                                    data: JSON.stringify({
-                                        "downloadUrl": downloadUrl,
-                                        "username": username,
-                                        "email": email,
-                                    }),
-                                    async: true,
-                                    success: function(responseText) {
-                                        console.log('ici succ');
-                                    },
-                                    error: function (error) {
-                                        console.log(error);
-                                    }
-                            });
-
-                        });       
-
+                downloadURLUser = upload.snapshot.downloadURL;
+                $('#profil').attr('src', downloadURLUser);
             });
-        });
+        }); // camera
 
-    }
 
-    });
+        $('#button-settingsAdmin').click(function(e) {
 
-$('#savePassword').click(function(e) {
-    e.preventDefault();
-     let password = $('#password').val().trim();
+            e.preventDefault();
+            disable();
+            let downloadURL
 
-        if(password.length < 8) {
-             $('#password').after('<div class="erreur text-dark medium" style="font-size: small; margin-top: 10px;">Merci de rentrer un mot de passe de 8 caractères minimum</div>');
-        }
+            let usernameShow = $('#username').val();
+            let emailShow    = $('#email').val();
 
-        if(password.length > 8)
-        {
+            let profil = $('#profil').attr('src');
+            console.log(profil)
+          
+           let data = JSON.stringify({tokenUser:token , username: usernameShow, avatar: profil, idUser: userId, email: emailShow});
             $.ajax({
                 type: "POST", 
-                url: "/superadmin/setting/password/{{app.user.id}}", 
-                data: JSON.stringify({
-                    "password": password,
-                }),
+                url: "/superadmin/setting/show", 
+                data: data,
+                dataType: 'json',
                 async: true,
-                success: function(responseText) {
-                    console.log('ici succès');
-                    
-                    $('#mypassword').css("display", "block");
+                success: function(response) {
+                    reset();
+                    if(response != undefined){
+                        //rep mise a jour 
+                        $('#mycompte').html(response.message);
+                        $('#mycompte').css("display","block");
+                    }
+                    console.log(response);
+                
                 },
-                error: function (error) {
-                    console.log(error);
+                error: function (err) {
+                    reset();
+                    console.log(err);
                 }
-            }); 
-        }
-});   
+            });
 
+        }); // setting user
+
+    }
+    });// fin firebase
+
+     //update password
+        $("#savePassword").click((e) => {
+            e.preventDefault(); 
+            disable();
+
+            let password = $('#password').val();
+
+            $.ajax({
+                type: "POST", 
+                url: "/superadmin/setting/password", 
+                data: JSON.stringify({
+                    "token": token,
+                    "password": password,
+                    "idUser": userId,
+                }),
+                dataType: 'json',
+                async: true,
+                success: function(response) {
+                    reset();
+                    if(response != undefined){
+                        $('#mypassword').html(response.message); 
+                        $('#mypassword').css("display","block");
+                    }
+                    console.log(response);
+                
+                },
+                error: function (err) {
+                    reset();
+                    console.log(err);
+                }
+            });
+        });
     
 });
 </script>

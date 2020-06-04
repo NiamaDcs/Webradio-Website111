@@ -19,13 +19,17 @@
                     </div>
                     <div class="col-xl-10 d-flex"> 
 
-                     {#{ form_start(form) }}
-                        <!-- Search form -->
-                        <div class="form-group has-search user">
-                            <button class="fa fa-search form-control-feedback"></button>
-                             {{ form_row(form.channels) }}
+                        <div class="conteneur d-flex flex-column align-items-center justify-content-center">
+                            <div class="row recherche">
+                                <div class="col">
+                                    <div class="form-group has-search ">
+                                        <span class="fa fa-search form-control-feedback"></span>
+                                        <input type="text" class="form-control text-dark" placeholder="Rechercher une radio"> 
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                      {{ form_end(form) }#}
+
                     </div>
                 </div>
                 <div class="row">
@@ -47,23 +51,10 @@
                                             <th scope='col'>Management</th>
                                         </tr>
                                     </thead>
-                                    <tbody id='corps-table'>
-                                         {% for Signalement in Signalements %}
-                                            <tr>
-                                                <td><img class="rounded-circle" style="font-size:2em; width:31px; height:32px;" src="{{ Signalement.avatar }}" alt="" id="profil"></td>
-                                                <td>{{ Signalement.nomChaine }}</td>
-                                                <td>{{ Signalement.nombreSignal }}</td>
-                                                <td><a href='{{ path('admin.Signalements.show', {slug: Signalement.slug, id: Signalement.id}) }}' >{{ Signalement.listSignal }}</a></td>
-                                                <td>
-                                                   <a href='#bannirModal' data-toggle='modal' data-dismiss='modal' class='btn text-danger'>{{ Signalement.management }}</a>
-                                                </td>
-                                            </tr>
-                                            {% include 'admin/signalements/bannir.html.twig' %}
-                                         {% endfor %}
-                                    </tbody>
+                                    
                                     </table>
                                     <div class="pagination mt-2 d-flex justify-content-center" id="pagination_data">
-                                        {{ knp_pagination_render(Signalements) }}
+                                        
                                     </div>      
                                   </div>
                                 </div>                                

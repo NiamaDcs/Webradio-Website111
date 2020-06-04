@@ -19,13 +19,16 @@
                     </div>
                     <div class="col-xl-10 d-flex"> 
 
-                     {#{ form_start(form) }}
-                        <!-- Search form -->
-                        <div class="form-group has-search user">
-                            <button class="fa fa-search form-control-feedback"></button>
-                             {{ form_row(form.channels) }}
+                        <div class="conteneur d-flex flex-column align-items-center justify-content-center">
+                            <div class="row recherche">
+                                <div class="col">
+                                    <div class="form-group has-search ">
+                                        <span class="fa fa-search form-control-feedback"></span>
+                                        <input type="text" class="form-control text-dark" placeholder="Rechercher une radio"> 
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                      {{ form_end(form) }#}
                     </div>
                 </div>
                 <div class="row">
@@ -36,38 +39,22 @@
                             <div class="card-body">
                                 <div class="row col-sm-12">
                                     <div class="table-responsive">
-                                
-                                    <table id="table" class"table table-bordered w-100" role="grid">
-                                    <thead>
-                                        <tr id='entete' role="row">
-                                            <th scope='col'>Avatar</th>
-                                            <th scope='col'>Nom de la chaîne</th>
-                                            <th scope='col'>Propriétaire</th>
-                                            <th scope='col'>Status</th>
-                                            <th scope='col'>Management</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id='corps-table'>
-                                         {% for channel in channels %}
+                                        <table class="table table-bordered" id="channel-table" width="100%" cellspacing="0">
+                                        <thead>
                                             <tr>
-                                                <td><img class="rounded-circle" style="font-size:2em; width:31px; height:32px;" src="{{ channel.avatar }}" alt="" id="profil"></td>
-                                                <td>{{ channel.nomChaine }}</td>
-                                                <td>{{ channel.proprietaire }}</td>
-                                                <td>{{ channel.status }}</td>
-                                                <td>
-                                                    <a href='#bannirModal' data-toggle='modal' data-dismiss='modal'  class='far fa-trash-alt fa-2x'></a>
-                                                  
-                                                    <a href='{{ path('admin.channel.edit', {id: channel.id}) }}' class='fa-2x far fa-edit' id=''></a>
-                                                    
-                                                </td>
+                                                <th>Avatar</th>
+                                                <th>Nom de la chaîne</th>
+                                                <th>Status</th>
+                                                <th>Management</th>
                                             </tr>
-                                            {% include 'admin/channel/removeChannel/modal.html.twig' %}
-                                         {% endfor %}
+                                        </thead>
+                                    <tbody id="channels-corps">
+                                        
                                     </tbody>
-                                    </table>
-                                    <div class="pagination mt-2 d-flex justify-content-center" id="pagination_data">
-                                        {{ knp_pagination_render(channels) }}
-                                    </div>      
+                                    </table> 
+                                    <div style="height: auto; text-align: center" class="chart-area" id="pagination_data">
+                                       
+                                    </div> 
                                   </div>
                                 </div>                                
                             </div>
@@ -99,6 +86,8 @@
     <i class="fas fa-angle-up"></i>
 </a>
 {#% include 'admin/Users/RemoveUser/modal.html.twig' %#}
+ {% include 'admin/channel/removeChannel/modal.html.twig' %}
+                                         
 
 </body>
 

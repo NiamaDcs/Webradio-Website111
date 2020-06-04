@@ -41,10 +41,9 @@ class ProfilController extends BaseController
  
             $response = Unirest\Request::get($url,$headers);
  
-          // $result = $response->raw_body; return $this->redirectToRoute('profile.setting.index');
-            
-          $result = $response->raw_body; 
-          return new Response($result, 201);
+       
+            $result = $response->raw_body; 
+            return new Response($result, 201);
             
         }
     }

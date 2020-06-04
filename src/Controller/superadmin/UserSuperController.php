@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\admin;
+namespace App\Controller\superadmin;
 
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
@@ -9,12 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Unirest;
 
 /**
-* @Route("/admin/users")
+* @Route("/superadmin/users")
 */
-class UsersAdController extends BaseController
+class UserSuperController extends BaseController
 {
     /**
-    * @Route("/", name="admin.users.index",)
+    * @Route("/", name="superadmin.users.index",)
     */
     public function index()
     {
@@ -22,7 +22,7 @@ class UsersAdController extends BaseController
     }
 
     /**
-    * @Route("/new", name="admin.users.new", methods={"GET","POST"})
+    * @Route("/new", name="superadmin.users.new", methods={"GET","POST"})
     */
     public function new(Request $request)
     {
@@ -30,7 +30,7 @@ class UsersAdController extends BaseController
     }
 
     /**
-     * @Route("/{id}/edit", name="admin.users.edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="superadmin.users.edit", methods={"GET","POST"})
      */
     public function edit(Request $request)
     {
@@ -38,7 +38,7 @@ class UsersAdController extends BaseController
     }
 
     /**
-    * @Route("/{id}", name="admin.user.bannir", methods={"GET","POST"})
+    * @Route("/{id}", name="superadmin.user.bannir", methods={"GET","POST"})
     */
     public function bannir()
     {

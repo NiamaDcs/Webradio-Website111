@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\admin;
+namespace App\Controller\superadmin;
 
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\BaseController;
@@ -9,21 +9,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Unirest;
 
     /**
-     * @Route("/admin")
+     * @Route("/superadmin")
      */
-class AdDashController extends BaseController
+class SuperADashController extends BaseController
 {
 
     /**
-     * @Route("/", name="admin.index", methods={"GET"})
+     * @Route("/", name="superadmin.index", methods={"GET"})
      */
     public function index() 
     {
-        return $this->render('admin/base.html.twig');
+        return $this->render('superadmin/base.html.twig');
     }
 
     /**
-     * @Route("/stats", name="admin.stats.show", methods={"POST"})
+     * @Route("/stats", name="superadmin.stats.show", methods={"POST"})
      */
     public function getStatistics(Request $request)
     {
@@ -31,15 +31,15 @@ class AdDashController extends BaseController
     }
 
     /**
-     * @Route("/setting", name="admin.setting.index")
+     * @Route("/setting", name="superadmin.setting.index")
      */
     public function settings(Request $request)
     {
-        return $this->render("admin/settings/base.html.twig"); 
+        return $this->render("superadmin/settings/base.html.twig"); 
     }
 
     /**
-     * @Route("/setting/show", name="admin.setting.show", methods={"POST"})
+     * @Route("/setting/show", name="superadmin.setting.show", methods={"POST"})
      */
     public function getData(Request $request)
     {
@@ -73,7 +73,7 @@ class AdDashController extends BaseController
 
   
     /**
-     * @Route("/setting/password", name="admin.passwordChange")
+     * @Route("/setting/password", name="superadmin.passwordChange")
      */
     public function passwordChange(Request $request)
     {
@@ -93,9 +93,7 @@ class AdDashController extends BaseController
             $url = "https://webradio-stream.herokuapp.com/authorized/users/password/$userId";
  
             $response = Unirest\Request::put($url,$headers,$body);
- 
-          // $result = $response->raw_body; return $this->redirectToRoute('profile.setting.index');
-            
+     
           $result = $response->raw_body; 
           return new Response($result, 201);
             

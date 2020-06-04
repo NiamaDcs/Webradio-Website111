@@ -22,30 +22,10 @@ $(document).ready(function() {
 
     $.ajax({
     method: "GET", 
-    url: "/admin/stats", 
+    url: "", 
     async: true,
     success: function(data) {
-        mydata = data[0];
-        statisticsData = mydata.statistics
-        console.log(statisticsData);
-
-             let nombre_dutilisateurs;
-             let nombre_dabonnes;
-             let total_decoutes;
-             let nombre_chaines_creee;
-             
-        for(var j=0;j<mydata.statistics.length;j++){
-            nombre_dutilisateurs = mydata.statistics[j].nombre_dutilisateurs;
-            nombre_dabonnes = mydata.statistics[j].nombre_dabonnes;
-            total_decoutes = mydata.statistics[j].total_decoutes;
-            nombre_chaines_creee = mydata.statistics[j].nombre_chaines_creee;
-        }
-
-            $("#nombre_dutilisateurs").html(nombre_dutilisateurs);
-            $("#nombre_dabonnes").html(nombre_dabonnes);
-            $("#total_decoutes").html(total_decoutes);
-            $("#nombre_chaines_creee").html(nombre_chaines_creee);
-       
+        
     }
 
 });
