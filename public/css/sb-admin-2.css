@@ -404,7 +404,7 @@ a.btn.bouton-password{color: white; box-shadow: 0 6px 10px 0 #0000001a,0 1px 18p
     background-image: url('../assets/pause.png') !important;
 }
 
-#entete th{
+/*#entete th{
     border-top: none !important;
     border-left: none !important;
     text-align: center;
@@ -412,8 +412,8 @@ a.btn.bouton-password{color: white; box-shadow: 0 6px 10px 0 #0000001a,0 1px 18p
     line-height: 15px;
     font-weight: 100 !important;
     color: black;
-}
-#entete th:last-child, #corps-table td:last-child, #malist td:last-child {border-right: none !important;}
+}*/
+/*#entete th:last-child, #corps-table td:last-child, #malist td:last-child {border-right: none !important;}
 #corps-table td, #malist td{
     border-left: none !important;
     text-align: center;
@@ -421,7 +421,7 @@ a.btn.bouton-password{color: white; box-shadow: 0 6px 10px 0 #0000001a,0 1px 18p
 }
 #corps-table td:first-child, #malist td:first-child{
     border-top: none !important;
-}
+}*/
 
 #channel-table th, td { 
     text-align: center;
@@ -429,14 +429,19 @@ a.btn.bouton-password{color: white; box-shadow: 0 6px 10px 0 #0000001a,0 1px 18p
     color: #242427;
 }
 
-#channel-table tr {
-    border: 1px solid #5a5c69;
+#users-table th, td { 
+    text-align: center;
+    width: 153px !important;
+    color: #242427;
+    border-right: 1px solid black;
 }
 
-#channel-table td:first-child td:last-child{
+#channel-table tr {border: 1px solid #5a5c69;}#users-table tr {border: 1px solid #5a5c69;}
+
+/*#channel-table td:first-child td:last-child{
     
 
-}
+}*/
 
 
 .couleur-principal{

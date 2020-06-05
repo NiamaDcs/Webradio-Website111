@@ -18,7 +18,33 @@ class UsersAdController extends BaseController
     */
     public function index()
     {
+        return $this->render('admin/user/index.html.twig');
+    }
 
+    /**
+    * @Route("/show", name="admin.users.show", methods={"POST"})
+    */
+    public function allUser(Request $request)
+    {
+        if($request->isXmlHttpRequest()){
+            $content = $request->getContent();
+
+            $params = json_decode($content, true);
+
+            $token = $params['token'];
+
+            $headers = array('Accept' => 'application/json', 'Authorization' => "Bearer $token");
+            
+            
+            $url = "https://webradio-stream.herokuapp.com/authorized/users";
+ 
+            $response = Unirest\Request::get($url,$headers);
+ 
+            
+            $result = $response->raw_body; 
+            return new Response($result, 201);
+            
+        }
     }
 
     /**
@@ -26,16 +52,43 @@ class UsersAdController extends BaseController
     */
     public function new(Request $request)
     {
-
+        return $this->render('admin/user/new/new.html.twig');
     }
 
     /**
-     * @Route("/{id}/edit", name="admin.users.edit", methods={"GET","POST"})
+     * @Route("/edit/{id}", name="admin.users.edit", methods={"GET","POST"})
      */
     public function edit(Request $request)
     {
-
+        $content = $request->getContent();
+        dump($content);
+        
+        return $this->render('admin/user/edit/edit.html.twig');
     }
+
+    public function getOneUser(Request $request) 
+    {
+        if($request->isXmlHttpRequest()){
+            $content = $request->getContent();
+
+            $params = json_decode($content, true);
+            $token = $params['token'];
+            $idUser = $params['user_id'];
+
+            $headers = array('Accept' => 'application/json', 'Authorization' => "Bearer $token");
+            
+            $url = 'https://webradio-stream.herokuapp.com/authorized/users/logged';
+            //PUT https://webradio-stream.herokuapp.com/authorized/users/${user_id}
+ 
+            $response = Unirest\Request::get($url,$headers);
+ 
+       
+            $result = $response->raw_body; 
+            return new Response($result, 201);
+            
+        }
+    }
+
 
     /**
     * @Route("/{id}", name="admin.user.bannir", methods={"GET","POST"})
