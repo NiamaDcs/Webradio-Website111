@@ -19,9 +19,91 @@
 console.log("new user")
 
 
-
-
 $(document).ready(function() {
+
+const token = localStorage.getItem("token");
+
+String.prototype.rtrim = function() {
+    return this.replace(/\s+$/, "");
+}
+
+        let lowerCaseLetters = /[a-z]/gi;
+        let numbers = /[0-9]/i;
+        let upperCaseLetters = /[A-Z]/gi;
+
+function inputUsername(inputData,input){
+    let usernameData = inputData.rtrim();
+    let usernameInput = input;
+
+    if(usernameData.length < 1){
+        usernameInput.after('<div class="erreur text-dark small" style="font-size: xx-small;">Le nom d\'utilisateur doit être de 3 caractères minimum et ne peux pas contenir d\'espace</div>');   
+        
+    }else{
+        if(usernameData > 10) {
+            usernameInput.after('<div class="erreur text-dark small" style="font-size: xx-small;">Le nom d\'utilisateur doit être  moins de 10 caractères</div>');
+        }
+         return usernameData;
+           
+    }
+}//  verify username
+
+function inputEmail(inputData, input){
+    let emailData = inputData.rtrim();
+
+    emailInput = input;
+    if(emailData.length < 1) {
+        emailInput.after('<div class="erreur text-dark small" style="font-size: xx-small;">Ce champ est obligatoire</div>');
+    }else{
+        let regEx = /^[a-zA-Z0-9][a-zA-Z0-9._%+-]{0,63}@(?:[a-zA-Z0-9-]{1,63}\.){1,125}[a-zA-Z]{2,63}$/;
+        let validEmail = regEx.test(emailData);
+
+        if(!validEmail)
+        {
+            emailInput.after('<span class="erreur text-dark small" style="font-size: xx-small;">Merci de rentrer une adresse email valide</span>');
+        }
+        else{
+            return emailData;
+        }
+    }
+
+}//  email verify
+
+function inputPassword(inputData, input){
+    let passwordData = inputData;
+    passwordInput = input;
+
+    if(passwordData.length < 8){
+        passwordInput.after('<div class="erreur text-dark small-2" style="font-size: xx-small;">Merci de rentrer un mot de passe de 8 caractères minimum</div>');
+        
+    }else  {
+
+        if(!passwordData.match(lowerCaseLetters)) {
+            passwordInput.after('<div class="erreur text-dark small-2" style="font-size: xx-small;">Le mot de passe doit contenir au moins une letter minuscule</div>');   
+        } 
+        else if(!passwordData.match(upperCaseLetters)) {
+            passwordInput.after('<div class="erreur text-dark small-2" style="font-size: xx-small;">Le mot de passe doit contenir au moins une letter majuscule</div>');   
+        }
+
+        else if (!passwordData.match(numbers)) {
+            passwordInput.after('<div class="erreur text-dark small-2" style="font-size: xx-small;">Le mot de passe doit contenir au moins un chiffre</div>');   
+        }
+        return passwordData;
+    }
+} // password verify
+
+
+    const reset = () => {
+        $(".btn_submit").attr("disabled", false);
+        $(".btn_submit").css("background-color", "#EF0051");
+        $(".btn_submit").hover(() => { $(".btn_submit").css("background-color", "#D31052") })
+    };
+
+    const disable = () => {
+        $(".btn_submit").attr("disabled", true);
+        $(".btn_submit").css("background-color", "gray");
+    }
+
+
 
     let firebaseConfig;
     let downloadUrl;
@@ -70,61 +152,56 @@ $(document).ready(function() {
                 // On remplace l'URL de l'image par la nouvelle
                     $('#profil').attr('src', downloadUrl);
                     $('#logo-setting').attr('src', downloadUrl)
-
-
-                        $('#saveUser').click(function(e){
-                            e.preventDefault();
-                            console.log(downloadUrl)
-
-                            let username = $('#username').val();
-                            let email = $('#email').val();
-                            let role = $('#sel1').val();
-
-
-                                 $(".erreur").remove();
-
-                                if (username.length < 3) 
-                                {
-                                    $('#username').after('<div class="erreur text-dark medium" style="font-size: small; margin-top: 10px;">Le nom d\'utilisateur doit être de 3 caractères minimum et ne peux pas contenir d\'espace</div>'); 
-                                }else if(username.length > 10)
-                                {
-                                    $('#username').after('<div class="erreur text-dark medium" style="font-size: small; margin-top: 10px;">Le nom d\'utilisateur doit être  moins de 10 caractères</div>');
-                                }
-                                if (email.length < 1)
-                                {
-                                $('#email').after('<div class="erreur text-dark medium" style="font-size: small; margin-top: 10px;">Ce champ est obligatoire</div>'); 
-                                }else{
-                                    let regEx = /^[a-zA-Z0-9][a-zA-Z0-9._%+-]{0,63}@(?:[a-zA-Z0-9-]{1,63}\.){1,125}[a-zA-Z]{2,63}$/;
-                                    let validEmail = regEx.test(email);
-
-                                    if(!validEmail)
-                                    {
-                                        $('#email').after('<span class="erreur text-dark medium" style="font-size: small; margin-top: 10px;">Merci de rentrer une adresse email valide</span>');
-                                    }
-                                }
-
-                            $.ajax({
-                                    type: "POST", 
-                                    url: "/admin/users/new", 
-                                    data: JSON.stringify({
-                                        "downloadUrl": downloadUrl,
-                                        "username": username,
-                                        "email": email,
-                                        "role": role,
-                                    }),
-                                    async: true,
-                                    success: function(responseText) {
-                                        console.log('compte crée avec succès');
-                                    },
-                                    error: function (error) {
-                                        console.log(error);
-                                    }
-                            });
-
-                        });       
+   
 
             });// i
         });
+
+    $('#saveUser').click(function(e){
+        e.preventDefault();
+        disable();
+
+        let email = $('#email').val();
+        let inpEmail = $('#email');
+
+        let username = $('#username').val();
+        let inpUser = $('#username');
+
+        let createEmail = inputEmail(email,inpEmail);
+        let createUser = inputUsername(username,inpUser);
+
+        let profilUrl = $('#profil').attr('src');
+
+
+        $.ajax({
+                type: "POST", 
+                url: "/admin/users/new", 
+                data: JSON.stringify({
+                    "token": token,
+                    "avatar": profilUrl,
+                    "username": createUser,
+                    "email": createEmail,
+
+                }),
+                dataType: 'json',
+                async: true,
+                success: function(data) {
+                    reset();
+
+                    if(data != undefined){
+    
+                        $('#newcompte').html(response.message);
+                        $('#newcompte').css("display","block");
+                    }
+                    console.log(data);
+                },
+                error: function (error) {
+                    reset();
+                    console.log(error);
+                }
+        });
+
+    }); // fin onclick   
 
     }
 

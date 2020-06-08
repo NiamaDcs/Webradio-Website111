@@ -167,14 +167,9 @@ function inputPassword(inputData, input){
     }
 } // password verify
 
-   
-    $(".image-upload").hide();
-    $(".image-upload-channel").hide();
-    $("#forgot_pass_form").hide();
+
     let user = {};
-    let channel = {};
-    let downloadURL;
-    let downloadURLRadio;
+   
 
     const reset = () => {
         $(".btn_submit").attr("disabled", false);
@@ -282,6 +277,7 @@ function inputPassword(inputData, input){
 
                         $('#login-success').css("display", "block");
                         $('#login-success').html("L'affichage de votre profile peut prendre du temps à arriver. Si rien ne se passe, attendez quelques secondes");
+                        
                         mytoken = response.message.token;
 
                         //get profile
@@ -296,14 +292,6 @@ function inputPassword(inputData, input){
 
                                     if(response != undefined){
 
-                                        localStorage.setItem("username", responsepro.user[0].username);
-                                        localStorage.setItem("avatar", responsepro.user[0].avatar);
-                                        localStorage.setItem("password", responsepro.user[0].password);
-                                        localStorage.setItem("userId", responsepro.user[0].user_id); 
-                                        localStorage.setItem("channelId", responsepro.user[0].channel_id); 
-                                        localStorage.setItem("status", responsepro.user[0].status);
-                                        localStorage.setItem("email", responsepro.user[0].email);
-
                                         let role = responsepro.user[0].role;
                                     if(role === "ROLE_SUPER_ADMIN")
                                     {
@@ -315,6 +303,11 @@ function inputPassword(inputData, input){
 
                                     }else if(role === "ROLE_ADMIN"){
 
+                                        localStorage.setItem("username", responsepro.user[0].username);
+                                        localStorage.setItem("email", responsepro.user[0].email);
+                                        localStorage.setItem("password", responsepro.user[0].password);
+                                        localStorage.setItem("avatar", responsepro.user[0].avatar);
+
                                             setTimeout(function(){
 
                                                 window.location.href = "/admin";
@@ -322,6 +315,14 @@ function inputPassword(inputData, input){
                                             }, 2000);
 
                                     }else if(role === "ROLE_USER"){
+
+                                        localStorage.setItem("username", responsepro.user[0].username);
+                                        localStorage.setItem("avatar", responsepro.user[0].avatar);
+                                        localStorage.setItem("password", responsepro.user[0].password);
+                                        localStorage.setItem("userId", responsepro.user[0].user_id); 
+                                        localStorage.setItem("channelId", responsepro.user[0].channel_id); 
+                                        localStorage.setItem("status", responsepro.user[0].status);
+                                        localStorage.setItem("email", responsepro.user[0].email);
 
                                             setTimeout(function(){
 

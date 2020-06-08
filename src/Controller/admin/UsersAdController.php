@@ -77,8 +77,7 @@ class UsersAdController extends BaseController
 
             $headers = array('Accept' => 'application/json', 'Authorization' => "Bearer $token");
             
-            $url = 'https://webradio-stream.herokuapp.com/authorized/users/logged';
-            //PUT https://webradio-stream.herokuapp.com/authorized/users/${user_id}
+            $url = "https://webradio-stream.herokuapp.com/authorized/users/$idUser";
  
             $response = Unirest\Request::get($url,$headers);
  
@@ -89,13 +88,41 @@ class UsersAdController extends BaseController
         }
     }
 
-
     /**
-    * @Route("/{id}", name="admin.user.bannir", methods={"GET","POST"})
-    */
-    public function bannir()
+     * 
+     *@Route("/new", name="admin.users.new", methods={"GET", "POST"})
+     * @param Request $request
+     * @return void
+     */
+    public function createUser(Request $request)
     {
+        if($request->isMethod("POST")){
 
+            $content = $request->getContent();
+
+            $params = json_decode($content, true);
+
+
+            $email = $params['email'];
+            $username = $params['username'];
+            $token = $params['token'];
+            $avatar = $params['avatar'];
+
+            $headers = array('Accept' => 'application/json', 'Authorization' => "Bearer $token");
+            $query = array('email' => $email, 'username' => $username, 'avatar' =>$avatar);
+            
+            $url = 'https://webradio-stream.herokuapp.com/authorized/users/create';
+            $body = Unirest\Request\Body::form($query);
+ 
+            $response = Unirest\Request::post($url,$headers,$body);
+ 
+           $result = $response->raw_body;
+
+            return new Response($result, 201);
+            //return new Response(json_encode($query), 201);
+        }
+
+        return $this->render("admin/user/new/new.html.twig");
     }
 
     
