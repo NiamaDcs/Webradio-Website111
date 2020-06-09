@@ -21,17 +21,9 @@ class HomeController extends BaseController {
     /**
      * @Route("/", name="home.index")
      */
-    public function index(PaginatorInterface $paginator, Request $request): Response 
-    {
-       /* $search = new RadioSearch();
-        $form = $this->createForm(RadioSearchType::class, $search);
-        $form->handleRequest($request);
-
-        $radios = $paginator->paginate($this->repository->findAllVisibleQuery($search),
-        $request->query->getInt('page', 1), 5);*/
-        
+    public function index(): Response 
+    {        
         return $this->render('pages/home.html.twig');
-
     }
 
     /**

@@ -13,36 +13,11 @@ class SecurityController extends AbstractController
 {
     
     /**
-     * @Route("/login", name="app.login", methods={"POST"})
+     * @Route("", name="app.login", methods={"GET"})
      */
     public function login(Request $request)
     {
-        if($request->isXmlHttpRequest()){
-            $content = $request->getContent();
-
-            $params = json_decode($content, true);
-
-
-            $email = $params['email'];
-            $password = $params['password'];
-
-            $headers = array('Accept' => 'application/json');
-            $query = array('email' => $email, 'password' => $password);
-            
-            $url = 'https://webradio-stream.herokuapp.com/auth/login';
-            $body = Unirest\Request\Body::form($query);
- 
-            $response = Unirest\Request::post($url,$headers,$body);
- 
-           $result = $response->raw_body;
-
-            return new Response($result, 201);
-            //return new Response(json_encode($query), 201);
-            
-        }
-        
         return $this->render('page/home.html.twig');
-        
     }
 
 

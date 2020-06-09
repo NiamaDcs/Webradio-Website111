@@ -57,7 +57,7 @@ class ChannelAdController extends BaseController {
     }
 
     /**
-    * @Route("/edit/show", name="admin.edit.show", methods={"POST"})
+    * @Route("/show-one-channel", name="admin.one.channel", methods={"POST"})
     */
     public function getOneChannel(Request $request)
     {
@@ -72,15 +72,16 @@ class ChannelAdController extends BaseController {
             $headers = array('Accept' => 'application/json', 'Authorization' => "Bearer $token");
             
             
-            /*$url = "https://webradio-stream.herokuapp.com/authorized/channels/update/$channelId";
+            $url = "https://webradio-stream.herokuapp.com/authorized/channels/$channelId";
  
             $response = Unirest\Request::get($url,$headers);
  
             
             $result = $response->raw_body; 
-            return new Response($result, 201);*/
+            return new Response($result, 201);
 
-            return new Response("ok");
+            //returnreturn new Response('ok');
+
         }
     }
 
@@ -89,28 +90,31 @@ class ChannelAdController extends BaseController {
     */
     public function updateChannel(Request $request)
     {
-        if($request->isMethod("POST")){
+        if($request->isXmlHttpRequest()){
 
             $content = $request->getContent();
 
             $params = json_decode($content, true);
             
             $channelName = $params['channelName'];
-            $token = $params['token'];
-            $avatar = $params['avatar'];
+            $token     = $params['token'];
+            $avatar    = $params['avatar'];
+            $channelId = $params['idChannel'];
 
+            dump($params);
             $headers = array('Accept' => 'application/json', 'Authorization' => "Bearer $token");
             $query = array('channelName' => $channelName, 'avatar' =>$avatar);
             
-            /*$url = "https://webradio-stream.herokuapp.com/authorized/channels/update/$channelId";
+            $url = "https://webradio-stream.herokuapp.com/authorized/channels/update/$channelId";
             $body = Unirest\Request\Body::form($query);
  
             $response = Unirest\Request::put($url,$headers,$body);
  
            $result = $response->raw_body;
 
-            return new Response($result, 201);*/
-            return new Response(json_encode($query), 201);
+            return new Response($result, 201);
+
+            //return new Response('ok');
         }
 
     }

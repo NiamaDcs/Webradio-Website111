@@ -58,11 +58,15 @@ $(document).ready(function() {
     const token = localStorage.getItem("token");
     let idChannel = localStorage.getItem("userChannelId");
 
-    if(token !== "") {
 
+    if(token !== "" || idChannel !=="") {
+
+        /*
+        * affiche une chaine 
+        */
         $.ajax({
             type: "POST", 
-            url: "/admin/channel/edit/show", 
+            url: "/admin/channel/show-one-channel", 
             data: JSON.stringify({
                 "token": token,
                 "idChannel": idChannel,
@@ -73,7 +77,9 @@ $(document).ready(function() {
                 reset();
 
                 if(response != undefined){
-
+                
+                    $('#channels').attr('value', response.channel.channel_name);
+                    $('#profil').attr('src', response.channel.avatar);
                 }
 
                 console.log(response);
@@ -83,15 +89,89 @@ $(document).ready(function() {
                 reset();
                 console.log(error);
             }
-        });
+        }); // fin ajax affiche 
+
+
+
+        /*
+        * Total de stream crée pour une chaîne
+        */
+
+        $.ajax({
+            type: "POST",
+            url: "",
+            data:JSON.stringify({}),
+            success: function(response){
+
+            },
+            async: true,
+            error: function(err){
+
+            }
+
+        });// fin stream total pour chaine   
+
+
+        /*
+        * Total de favoris d'une chaîne
+        */
+
+        $.ajax({
+            type: "POST",
+            url: "",
+            data: JSON.stringify({}),
+            success: function(response){
+
+            },
+            async: true,
+            error: function(err){
+
+            }
+
+        });// fin Total de favoris d'une chaîne
+
+
+        /*
+        * 
+        */
+
+        $.ajax({
+            type: "POST",
+            url: "",
+            data: JSON.stringify({}),
+            success: function(response){
+
+            },
+            async: true,
+            error: function(err){
+
+            }
+
+        });// 
+
+        /*
+        * 
+        */
+
+        $.ajax({
+            type: "POST",
+            url: "",
+            data: JSON.stringify({}),
+            success: function(response){
+
+            },
+            async: true,
+            error: function(err){
+
+            }
+
+        });// 
     }
 
     $.ajax({
     method: "GET", 
     url: "/firebase", 
-    async: true,
     success: function(data) {
-    //console.log(data.apiKey+" "+data.authDomain+" "+data.databaseURL+" "+data.projectId+" "+data.storageBucket);
     
         firebaseConfig = {
             apiKey: data.apiKey,
@@ -111,7 +191,7 @@ $(document).ready(function() {
 
         
             let filename = $('#cameraInput').val().replace(/C:\\fakepath\\/i, '');
-            let storageRef = firebase.storage().ref('/User/channel' + filename);
+            let storageRef = firebase.storage().ref('/User/channel'+idChannel+filename);
 
             // On envoi le fichier à Firebase
             let upload = storageRef.put(selectedFile);
@@ -146,40 +226,44 @@ $(document).ready(function() {
 
                 let profil = $('#profil').attr('src');
 
-                let channelName = inputEmail(channels,inputChannel);
+                let channelName = inputUsername(channels,inputChannel);
 
-             if(token !== "" || channelName !== undefined){
+             if(token !== "" || channelName !== undefined || idChannel !==""){
                         
-
+                 
                 $.ajax({
-                    type: "POST", 
-                    url: "/admin/channel/edit/update", 
-                    data: JSON.stringify({
-                        "token": token,
-                        "avatar": profil,
-                        "channelName": channelName,
-                    }),
-                    dataType: 'json',
-                    async: true,
-                    success: function(response) {
+                    type: "PUT", 
+                    url: `https://webradio-stream.herokuapp.com/authorized/channels/update/${idChannel}`, 
+                    data:{
+                        token: token,
+                        avatar: profil,
+                        channelName: channelName,
+                    },
+                    dataType: 'json'
+                }).done((response)=>{
+
                         reset();
 
                         console.log(response);
-                    },
-                    error: function (error) {
 
-                        reset();
-                        console.log(error);
-                    }
-                });
+                }).fail((error)=>{
+
+                    reset();
+                    console.log(error);
+
+                })
 
             }//if
 
         });  //fin 
 
-    }
+    },
+    
 
-    });
+    }); // firebase
+
+
+    
 
     
 });

@@ -21,59 +21,40 @@ $(document).ready(function() {
     let store = true;
     const token = localStorage.getItem("token");
 
-    let username        =  localStorage.getItem("username");
-    let avatar          =  localStorage.getItem("avatar");
-    let password        =  localStorage.getItem("password");
-    let userId          =  localStorage.getItem("userId"); 
-    let channelId       = localStorage.getItem("channelId");
-    let status          = localStorage.getItem("status");
-    let channelName     = localStorage.getItem("channel_name");
-    let channelAvatar   = localStorage.getItem("channel_avatar");
-    let nbrEcoute       = localStorage.getItem("nbr_ecoute");
-    let nbrEcouteGlobal = localStorage.getItem("nbr_ecoute_global");
-    let email           = localStorage.getItem("email");
-
     if(token !== null ) {
 
-        localStorage.removeItem('token'); 
+        //localStorage.removeItem('token'); 
+        window.localStorage.clear();
 
         console.log('Vous êtes deconnecté');
         store = false;
     }
 
-    if(username !== null) {
-        localStorage.removeItem("username");
-    }
-    if(avatar !== null) {
-        localStorage.removeItem("avatar");
-    }
-    if(password !== null){
-        localStorage.removeItem("password");
-    }
-    if(userId !== null){
-        localStorage.removeItem("userId"); 
-    }
-    if(channelId !== null){
-        localStorage.removeItem("channelId");
-    }
-    if(status !== null){
-        localStorage.removeItem("status");
-    }
-    if(channelName !== null){
-        localStorage.removeItem("channel_name");
-    }
-     if(channelAvatar !== null){
-        localStorage.removeItem("channel_avatar");
-    }
-     if(nbrEcoute !== null){
-        localStorage.removeItem("nbr_ecoute");
-    }
-     if(nbrEcouteGlobal !== null){
-        localStorage.removeItem("nbr_ecoute_global");
-    }
-    if(email !== null){
-        localStorage.removeItem("email");
-    }
+        $.ajax({
+            type: "GET", 
+            url: 'https://webradio-stream.herokuapp.com/auth/radios/all', 
+        }).done((response)=>{
+            
+            if(response != undefined)
+            {
+                 myradio = response.radios[0];
+                      let mytab;
+
+                    for(let i=0; i<4; i++) {
+
+                        mytab += "<tr><td><img class='img-radio' src='"+response.radios[i].logo+"' alt=''></td><td style='color: black;'>"+response.radios[i].radio_name+"</td><td><audio class='myaudio' id='track'><source src='"+response.radios[i].Stream.direct_url+"' type='audio/mp3' />Rien</audio><div id='player-container'><div id='play-pause"+i+"' class='play'>Play</div></div></td></tr>"; 
+                    }
+
+                $("#list-radio").html(mytab);
+            }
+            else console.log('failed');
+
+                console.log(response);
+
+        }).fail((error)=>{
+            console.log(error);
+        });
+
    
     
     let track =  document.getElementById("track");
@@ -166,9 +147,6 @@ function inputPassword(inputData, input){
         return passwordData;
     }
 } // password verify
-
-
-    let user = {};
    
 
     const reset = () => {
@@ -203,52 +181,52 @@ function inputPassword(inputData, input){
 
     if (dataUsername !== undefined && dataEmail !== undefined && dataPassword !== undefined)
     {
-        
-          $.ajax({
+
+        $.ajax({
                 type: "POST", 
-                url: "/register", 
-                data: JSON.stringify({
-                    "username": dataUsername,
-                    "email": dataEmail,
-                    "password": dataPassword,
-                }),
-                dataType: 'json',
-                async: true,
-                success: function(response) {
-                    reset();
-                    if(response.message != undefined)
-                    {
-                         localStorage.setItem("token", response.message.token);
-                         // modal show connexion
-                    }
-                    
-                    else console.log('failed');
-                    console.log(response);
-                   
+                url: 'https://webradio-stream.herokuapp.com/auth/register', 
+                data:{
+                    username: dataUsername,
+                    email: dataEmail,
+                    password: dataPassword,
                 },
-                error: function (err) {
+                dataType: 'json'
+            }).done((response)=>{
                     reset();
-                    console.log(err);
-                
+
+                if(response.message != undefined)
+                {
+                    
                 }
+                else console.log('failed');
+
+                    console.log(response);
+
+            }).fail((error)=>{
+
+                reset();
+
+                $('#register-alert').css("display", "block");
+                $('#register-alert').html("les données entrées sont invalides!!");
+
+                console.log('les données entrées sont invalides!!');
+                console.log(error);
+
             });
 
-    }else{
+    }//if
         
-        $('#register-alert').css("display", "block");
-        $('#register-alert').html("les données entrées sont invalides!!");
-
-        console.log('les données entrées sont invalides!!');
-        
-    }
 
 });// fin register
+
+
+    //login
 
     $("#login").click(function(e){
         e.preventDefault(); 
         disable();
 
-        let mytoken;
+        
         let emailLogin = $("#login_email").val();
         let inpEmail = $("#login_email");
 
@@ -260,112 +238,113 @@ function inputPassword(inputData, input){
  
         if (loginEmail !== undefined && loginPassword !== undefined)
         {
-            let data = JSON.stringify({email: loginEmail, password: loginPassword});
-
             $.ajax({
-                type: "POST",
-                url: '/login',
-                data: data,
-                dataType: 'json',
-                success: (response) =>
-                {
-                    reset();
-                    if(response.message != undefined) 
-                    {
-                        
-                        localStorage.setItem("token", response.message.token);
 
-                        $('#login-success').css("display", "block");
-                        $('#login-success').html("L'affichage de votre profile peut prendre du temps à arriver. Si rien ne se passe, attendez quelques secondes");
-                        
-                        mytoken = response.message.token;
-
-                        //get profile
-                        let data1 = JSON.stringify({ token1: mytoken,});
-                            $.ajax({
-                                type: "POST", 
-                                url: "/profile/show", 
-                                data: data1,
-                                dataType: 'json',
-                                async: true,
-                                success: function(responsepro) {
-
-                                    if(response != undefined){
-
-                                        let role = responsepro.user[0].role;
-                                    if(role === "ROLE_SUPER_ADMIN")
-                                    {
-                                            setTimeout(function(){
-
-                                                window.location.href = "/";
-
-                                            }, 2000);
-
-                                    }else if(role === "ROLE_ADMIN"){
-
-                                        localStorage.setItem("username", responsepro.user[0].username);
-                                        localStorage.setItem("email", responsepro.user[0].email);
-                                        localStorage.setItem("password", responsepro.user[0].password);
-                                        localStorage.setItem("avatar", responsepro.user[0].avatar);
-
-                                            setTimeout(function(){
-
-                                                window.location.href = "/admin";
-
-                                            }, 2000);
-
-                                    }else if(role === "ROLE_USER"){
-
-                                        localStorage.setItem("username", responsepro.user[0].username);
-                                        localStorage.setItem("avatar", responsepro.user[0].avatar);
-                                        localStorage.setItem("password", responsepro.user[0].password);
-                                        localStorage.setItem("userId", responsepro.user[0].user_id); 
-                                        localStorage.setItem("channelId", responsepro.user[0].channel_id); 
-                                        localStorage.setItem("status", responsepro.user[0].status);
-                                        localStorage.setItem("email", responsepro.user[0].email);
-
-                                            setTimeout(function(){
-
-                                                window.location.href = "/profile";
-
-                                            }, 2000);
-
-                                    }else{
-
-                                            setTimeout(function(){
-
-                                                window.location.href = "/";
-
-                                            }, 2000);
-                                    }
-                                    }
-                                    console.log(responsepro);
-                                },
-                                error: function (err) {
-                                    
-                                    console.log(err);
-                                }
-                            });
-
-                    }
-                    else console.log('failed');
-
-                    console.log(response);
+                type: "POST", 
+                url: 'https://webradio-stream.herokuapp.com/auth/login', 
+                data:{
+                    email: loginEmail,
+                    password: loginPassword,
                 },
-                error: (err) => {
+                dataType: 'json'
+
+            }).done((response)=>{
                     reset();
-                    console.log(err);
+
+                if(response.message != undefined)
+                {
+                    localStorage.setItem("token", response.message.token);
+
+                    $('#login-success').css("display", "block");
+                    $('#login-success').html("Votre profile s'affichera dans peu de temps");
+
+                    let mytoken = response.message.token;
+
+                    $.ajax({
+                        type: "GET",
+                        url: 'https://webradio-stream.herokuapp.com/authorized/users/logged',
+                        headers: {
+                            'Authorization':'Bearer ' + mytoken
+                        }
+                    })
+                    .done(function( data ) {
+                        
+                        if(data != undefined){
+
+                            let role = data.user[0].role;
+
+                            if(role === "ROLE_SUPER_ADMIN"){
+                                setTimeout(function(){
+
+                                    window.location.href = "/";
+
+                                }, 2000);
+
+                            }else if(role === "ROLE_ADMIN"){
+
+                                localStorage.setItem("username", data.user[0].username);
+                                localStorage.setItem("email", data.user[0].email);
+                                localStorage.setItem("password", data.user[0].password);
+                                localStorage.setItem("avatar", data.user[0].avatar);
+
+                                    setTimeout(function(){
+
+                                        window.location.href = "/admin";
+
+                                    }, 2000);
+
+                            }else if(role === "ROLE_USER"){
+
+                                localStorage.setItem("username", data.user[0].username);
+                                localStorage.setItem("avatar", data.user[0].avatar);
+                                localStorage.setItem("password", data.user[0].password);
+                                localStorage.setItem("userId", data.user[0].user_id); 
+                                localStorage.setItem("channelId", data.user[0].channel_id); 
+                                localStorage.setItem("status", data.user[0].status);
+                                localStorage.setItem("email", data.user[0].email);
+
+                                    setTimeout(function(){
+
+                                        window.location.href = "/profile";
+
+                                    }, 2000);
+
+                            }else{
+
+                                setTimeout(function(){
+
+                                    window.location.href = "/";
+
+                                }, 2000);
+                            }
+                          
+                        }
+                        console.log(data);
+                    });
+                        
+                    
+                }else {
+                    $('#login-alert').css("display", "block");
+                    $('#login-alert').html("la connexion a echouée");
                 }
-            });// fin ajax
-        }else{
-            $('#login-alert').css("display", "block");
-            $('#login-alert').html("les données entrées sont invalides!!");
 
-            console.log('les données entrées sont invalides!!');
+                console.log(response);
+
+            }).fail((error)=> {
+
+                reset();
+
+                $('#login-alert').css("display", "block");
+                $('#login-alert').html("les données entrées sont invalides!!");
+
+                console.log(error);
+
+            });
+
         }
+            
 
-
-    });// login
+    });// fin login
 
 
     

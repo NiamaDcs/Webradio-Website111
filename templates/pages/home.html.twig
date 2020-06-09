@@ -42,21 +42,9 @@
                             <div class="row col">
                                 <table id='tabAccueil' class='border0 tabAccueil'>
                                     <tbody id="list-radio" class="accueilTab">
-                                        {#% for radio in radios %}
-                                        <tr>
-                                            <td>
-                                                <img class='img-radio' src="{{ radio.avatar }}" alt="radio.{{radio.id}}">
-                                            </td>
-                                            <td>{{ radio.nameRadio }}</td>
-                                            <td>
-                                                <audio class='myaudio' id='track'>
-                                                    <source src="{{ radio.urlRadio }}" type='audio/mp3' />Rien</audio>
-                                                    <div id='player-container'>
-                                                        <div id='play-pause{{loop.index}}' class='play'>Play</div>
-                                                    </div>
-                                            </td>
-                                        </tr>
-                                          {% endfor %#}
+                                        
+                        
+                                            
                                     </tbody>
                                 </table>
                             </div>
