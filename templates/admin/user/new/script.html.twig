@@ -27,9 +27,6 @@ String.prototype.rtrim = function() {
     return this.replace(/\s+$/, "");
 }
 
-        let lowerCaseLetters = /[a-z]/gi;
-        let numbers = /[0-9]/i;
-        let upperCaseLetters = /[A-Z]/gi;
 
 function inputUsername(inputData,input){
     let usernameData = inputData.rtrim();
@@ -68,28 +65,6 @@ function inputEmail(inputData, input){
 
 }//  email verify
 
-function inputPassword(inputData, input){
-    let passwordData = inputData;
-    passwordInput = input;
-
-    if(passwordData.length < 8){
-        passwordInput.after('<div class="erreur text-dark small-2" style="font-size: xx-small;">Merci de rentrer un mot de passe de 8 caractères minimum</div>');
-        
-    }else  {
-
-        if(!passwordData.match(lowerCaseLetters)) {
-            passwordInput.after('<div class="erreur text-dark small-2" style="font-size: xx-small;">Le mot de passe doit contenir au moins une letter minuscule</div>');   
-        } 
-        else if(!passwordData.match(upperCaseLetters)) {
-            passwordInput.after('<div class="erreur text-dark small-2" style="font-size: xx-small;">Le mot de passe doit contenir au moins une letter majuscule</div>');   
-        }
-
-        else if (!passwordData.match(numbers)) {
-            passwordInput.after('<div class="erreur text-dark small-2" style="font-size: xx-small;">Le mot de passe doit contenir au moins un chiffre</div>');   
-        }
-        return passwordData;
-    }
-} // password verify
 
 
     const reset = () => {
@@ -172,8 +147,10 @@ function inputPassword(inputData, input){
 
         let profilUrl = $('#profil').attr('src');
 
+        const token = localStorage.getItem("token");
 
-        $.ajax({
+        if(token !== "" || createUser !== undefined || createEmail !== undefined){
+            $.ajax({
                 type: "POST", 
                 url: "/admin/users/new", 
                 data: JSON.stringify({
@@ -199,7 +176,8 @@ function inputPassword(inputData, input){
                     reset();
                     console.log(error);
                 }
-        });
+            });
+        }// if
 
     }); // fin onclick   
 

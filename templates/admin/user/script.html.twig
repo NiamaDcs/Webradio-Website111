@@ -16,6 +16,15 @@ $(document).ready(function() {
 
     if(token !== ""){ 
 
+        //recherche
+        $("#myInput").on("keyup", function() {
+            let value = $(this).val().toLowerCase();
+
+            $("#users-corps tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
         $.ajax({
             type: "POST", 
             url: "/admin/users/show", 
@@ -34,13 +43,13 @@ $(document).ready(function() {
 
                         idUser = response.users[i].user_id;
 
-                        mytab += "<tr><td ><img class='rounded-circle' style='font-size:2em; width:31px; height:32px;' src='"+response.users[i].avatar
-                        +"' id='profil'></td><td >"+response.users[i].username
-                        +"</td><td >"+response.users[i].email
-                        +"</td><td >"+response.users[i].username
-                        +"</td><td >"+response.users[i].status
-                        +"</td><td ><a href='#bannirModal' data-toggle='modal' data-dismiss='modal' class='far fa-trash-alt fa-2x'></a><a href='{{ path('admin.users.edit', {id: "idUser"}) }}' class='fa-2x far fa-edit' id='"
-                        +response.users[i].user_id+"'></a></td></tr>";
+                        mytab += '<tr><td ><img class="rounded-circle" style=font-size:2em; width:31px; height:32px;" src="'+response.users[i].avatar
+                        +'" id="profil"></td><td >'+response.users[i].username
+                        +'</td><td >'+response.users[i].email
+                        +'</td><td >'+response.users[i].username
+                        +'</td><td >'+response.users[i].status
+                        +'</td><td ><a href="#bannirModal" data-toggle="modal" data-dismiss="modal" class="far fa-trash-alt fa-2x"></a><a href="{{ path("admin.users.edit", {id: '+idUser+'}) }}" class="fa-2x far fa-edit" id="'
+                        +response.users[i].user_id+'"></a></td></tr>';
                     }
                     
                      $("#users-corps").append(mytab);

@@ -33,9 +33,9 @@ class RadiosController extends BaseController {
             $params = json_decode($content, true);
             $token = $params['token'];
 
-            $headers = array('Accept' => 'application/json', 'Authorization' => "Bearer $token");
+            $headers = array('Accept' => 'application/json');
             
-            $url = 'https://webradio-stream.herokuapp.com/authorized/radios/all';
+            $url = 'https://webradio-stream.herokuapp.com/auth/radios/all';
  
             $response = Unirest\Request::get($url,$headers);
  
