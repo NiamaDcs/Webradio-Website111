@@ -18,6 +18,27 @@
 
 $(document).ready(function() {
 
+String.prototype.rtrim = function() {
+    return this.replace(/\s+$/, "");
+}
+
+    function inputUsername(inputData,input){
+    let usernameData = inputData.rtrim();
+    let usernameInput = input;
+
+    if(usernameData.length < 1){
+        usernameInput.after('<div class="erreur text-dark small" style="font-size: xx-small;">Le nom d\'utilisateur doit être de 3 caractères minimum et ne peux pas contenir d\'espace</div>');   
+        
+    }else{
+        if(usernameData > 10) {
+            usernameInput.after('<div class="erreur text-dark small" style="font-size: xx-small;">Le nom d\'utilisateur doit être  moins de 10 caractères</div>');
+        }
+         return usernameData;
+           
+    }
+}//  verify username
+
+
    const reset = () => {
         $(".btn_submit").attr("disabled", false);
         $(".btn_submit").css("background-color", "#EF0051");
@@ -28,10 +49,6 @@ $(document).ready(function() {
         $(".btn_submit").attr("disabled", true);
         $(".btn_submit").css("background-color", "gray");
     }
-
-    let users = {};
-    let channel = {};
-    let downloadURLUser;
     
 
     let store = true;
@@ -55,12 +72,10 @@ $(document).ready(function() {
 
 
     $.ajax({
-    method: "GET", 
-    url: "/firebase", 
-    async: true,
-    success: function(data) {
-    //console.log(data.apiKey+" "+data.authDomain+" "+data.databaseURL+" "+data.projectId+" "+data.storageBucket);
-    
+        type: "GET",
+        url: "/firebase",
+    }).done((data) =>{
+
         firebaseConfig = {
             apiKey: data.apiKey,
             authDomain: data.authDomain,
@@ -71,7 +86,7 @@ $(document).ready(function() {
 
         firebase.initializeApp(firebaseConfig);
 
-     // changement input
+        // changement input
         $('#cameraInput').on('change', function() {
              
             let selectedFile = event.target.files[0];
@@ -89,82 +104,90 @@ $(document).ready(function() {
                 downloadURLUser = upload.snapshot.downloadURL;
                 $('#profil').attr('src', downloadURLUser);
             });
-        }); // camera
-
+        }); // fin camera
 
         $('#button-settingsAdmin').click(function(e) {
 
             e.preventDefault();
             disable();
-            let downloadURL
+        
 
             let usernameShow = $('#username').val();
-            let emailShow    = $('#email').val();
+            inpUser = $('#username');
+
+            let createUser = inputUsername(usernameShow,inpUser);
 
             let profil = $('#profil').attr('src');
-            console.log(profil)
-          
-           let data = JSON.stringify({tokenUser:token , username: usernameShow, avatar: profil, idUser: userId, email: emailShow});
-            $.ajax({
-                type: "POST", 
-                url: "/admin/setting/show", 
-                data: data,
-                dataType: 'json',
-                async: true,
-                success: function(response) {
-                    reset();
-                    if(response != undefined){
-                        //rep mise a jour 
-                        $('#mycompte').html(response.message);
-                        $('#mycompte').css("display","block");
-                    }
-                    console.log(response);
-                
+
+           if(token !== "" || createUser !== undefined ||  profil !== undefined)
+           {
+
+           $.ajax({
+               type: "PUT",
+               url: "https://webradio-stream.herokuapp.com/authorized/users/"+userId,
+               headers: {
+                    'Authorization':'Bearer ' + token
                 },
-                error: function (err) {
-                    reset();
-                    console.log(err);
+                data: {
+                    avatar: profil,
+                    username: createUser,
                 }
-            });
+           }).done((response) =>{
 
-        }); // setting user
+               reset();
+                if(response != undefined){
+                    //rep mise a jour 
+                    $('#mycompte').html(response.message);
+                    $('#mycompte').css("display","block");
+                }
+                console.log(response);
+           }).fail((error) =>{
+               
+               reset();
+               console.log(error);
+           });
 
-    }
-    });// fin firebase
+            }
+        });
 
-     //update password
-        $("#savePassword").click((e) => {
-            e.preventDefault(); 
-            disable();
+    }).fail((error) =>{
 
-            let password = $('#password').val();
+        console.log(error);
+    });
 
-            $.ajax({
-                type: "POST", 
-                url: "/admin/setting/password", 
-                data: JSON.stringify({
-                    "token": token,
-                    "password": password,
-                    "idUser": userId,
-                }),
-                dataType: 'json',
-                async: true,
-                success: function(response) {
+        if(token !== ""){
+            //update password
+            $("#savePassword").click((e) => {
+                e.preventDefault(); 
+                disable();
+
+                let passworduse = $('#password').val();
+
+                $.ajax({
+                    type: "PUT",
+                    url: "https://webradio-stream.herokuapp.com/authorized/users/password/"+userId,
+                    headers: {
+                        'Authorization':'Bearer ' + token
+                    },
+                    data: {
+                        password: passworduse,
+                    }  
+                }).done((response) =>{
                     reset();
+
                     if(response != undefined){
                         $('#mypassword').html(response.message); 
                         $('#mypassword').css("display","block");
                     }
                     console.log(response);
-                
-                },
-                error: function (err) {
-                    reset();
-                    console.log(err);
-                }
-            });
-        });
+                }).fail((error) =>{
 
+                    reset();
+                    console.log(error);
+                });
+
+            });
+        }
     
 });
 </script>

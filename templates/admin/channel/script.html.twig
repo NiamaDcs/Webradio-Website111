@@ -23,9 +23,9 @@ $(document).ready(function() {
 
     if(token !== ""){
 
-        $.ajax({
+       /* $.ajax({
             type: "POST", 
-            url: "/admin/channel/show", 
+            url: "$channelId", 
             data: JSON.stringify({
                 "token": token,
             }),
@@ -56,11 +56,6 @@ $(document).ready(function() {
 
                        localStorage.setItem("userChannelId", myId);
 
-                            /*setTimeout(function(){
-
-                            window.location.href = "/admin/channel/edit/"+myId;
-
-                        }, 2000);*/
 
                         console.log(myId);
 
@@ -75,7 +70,90 @@ $(document).ready(function() {
                 
                 console.log(err);
             }
-        }); //fin ajax
+        }); //fin ajax*/
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/channels/all",
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+
+        }).done((response)=>{
+
+            if(response != undefined) {
+
+                    let mytab;
+
+                    for(let i=0; i<response.channels.length; i++){
+                        
+                        mytab += '<tr><td ><img class="rounded-circle" style="font-size:2em; width:31px; height:32px;" src="'+response.channels[i].avatar
+                        +'" id="profil"></td><td >'+response.channels[i].channel_name
+                        +'</td><td >'+response.channels[i].status
+                        +'</td><td ><a href="#bannirModal" data-toggle="modal" data-dismiss="modal" class="far fa-trash-alt fa-2x" id="'
+                        +response.channels[i]._id+'"></a><a href="/admin/channel/edit/'+response.channels[i]._id+'" class="fa-2x far fa-edit" id="'
+                        +response.channels[i]._id+'"></a></td></tr>';
+                    }
+                    
+                    $("#channels-corps").append(mytab);
+
+                    $('.fa-edit').on("click", function(){
+
+                        let myId = $(this).attr("id");
+
+                       localStorage.setItem("userChannelId", myId);
+
+
+                        console.log(myId);
+
+                    });
+
+                    // recup id pour supprimer
+                    $('.fa-trash-alt').on("click", function(){
+
+                        let deleteId = $(this).attr("id");
+
+                       localStorage.setItem("deleteChannelId", deleteId);
+
+
+                        console.log(deleteId);
+
+                    });
+            }
+            console.log(response);
+
+        }).fail((error)=>{
+            console.log(error);
+        });
+
+        /*
+        *Suppression d'utilisateur
+        */
+        $('#deleteChannel').on("click", function(){
+
+            let channelIdelete = localStorage.getItem("deleteChannelId");
+
+              $.ajax({
+                type: "PUT", 
+                url: "https://webradio-stream.herokuapp.com/authorized/channels/banish/"+channelIdelete, 
+                headers: {
+                    'Authorization':'Bearer ' + token
+                }
+            }).done((response)=>{
+
+                localStorage.removeItem("deleteChannelId");
+
+                $('#messageSucces').html(response.message);
+                $('#messageSucces').css("display","block");
+                console.log(response.message);
+
+            }).fail((error)=>{
+
+                console.log(error);
+
+            });
+
+        });// fin delete
 
     }// fin if
 
