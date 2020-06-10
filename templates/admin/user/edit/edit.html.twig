@@ -21,6 +21,8 @@
                 </div>
                 <div class="main d-flex flex-column align-items-center justify-content-center">
                    
+                   <div class="row col-xl-12 alert alert-success"  style="display: none;" id="updatecompte" role="alert"></div>
+
                     <div class="image-upload">
                         <label for="cameraInput">
                             <img src="https://firebasestorage.googleapis.com/v0/b/webradio-stream.appspot.com/o/User%2F70element-1.png?alt=media&token=fa8fa419-9e5f-4738-b2de-85536002a0d1" alt="" id="profil">
@@ -37,7 +39,7 @@
                             </div>
         
                             <div class="form-group adduser">
-                                <button type="submit" id="enregister" class="form-control border-0 font-weight-bold text-white"  style="background-color:#EF0051;">Enregistrer</button>
+                                <button type="submit" id="enregister" class="form-control border-0 font-weight-bold text-white btn_submit"  style="background-color:#EF0051;">Enregistrer</button>
                             </div>
 
                          </div>
@@ -48,8 +50,7 @@
 
         </div>
         <!-- End of Main Content -->
-     {% include 'admin/user/edit/modalEdit.html.twig' %}
-</div>
+   
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">

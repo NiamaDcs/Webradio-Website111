@@ -16,16 +16,78 @@
 
 $(document).ready(function() {
 
+String.prototype.rtrim = function() {
+    return this.replace(/\s+$/, "");
+}
+
+    function inputUsername(inputData,input){
+    let usernameData = inputData.rtrim();
+    let usernameInput = input;
+
+    if(usernameData.length < 1){
+        usernameInput.after('<div class="erreur text-dark small" style="font-size: xx-small;">Le nom d\'utilisateur doit être de 3 caractères minimum et ne peux pas contenir d\'espace</div>');   
+        
+    }else{
+        if(usernameData > 10) {
+            usernameInput.after('<div class="erreur text-dark small" style="font-size: xx-small;">Le nom d\'utilisateur doit être  moins de 10 caractères</div>');
+        }
+         return usernameData;
+           
+    }
+}//  verify username
+
+
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("idForUser");
+
+    const reset = () => {
+        $(".btn_submit").attr("disabled", false);
+        $(".btn_submit").css("background-color", "#EF0051");
+        $(".btn_submit").hover(() => { $(".btn_submit").css("background-color", "#D31052") })
+    };
+
+    const disable = () => {
+        $(".btn_submit").attr("disabled", true);
+        $(".btn_submit").css("background-color", "gray");
+    }
+
+    /*
+    *recuperer l'utilisateur 
+    */
+
+    if(token !== ""){
+
+        $.ajax({
+                type: "GET", 
+                url: "https://webradio-stream.herokuapp.com/authorized/user/"+userId, 
+                headers: {
+                    'Authorization':'Bearer ' + token
+                }
+            }).done((response)=>{
+
+                if(response != undefined)
+                {
+                    $('#username').attr('value', response.user[0].username);
+                }
+                console.log(response);
+
+            }).fail((error)=>{
+
+                console.log(error);
+
+            });
+    
+
+
     let firebaseConfig;
     let downloadUrl;
 
     $.ajax({
     method: "GET", 
     url: "/firebase", 
-    async: true,
-    success: function(data) {
-    //console.log(data.apiKey+" "+data.authDomain+" "+data.databaseURL+" "+data.projectId+" "+data.storageBucket);
-    
+    })
+    .done(function(data) {
+
         firebaseConfig = {
             apiKey: data.apiKey,
             authDomain: data.authDomain,
@@ -44,7 +106,7 @@ $(document).ready(function() {
 
         
             let filename = $('#cameraInput').val().replace(/C:\\fakepath\\/i, '');
-            let storageRef = firebase.storage().ref('/User/' + filename);
+            let storageRef = firebase.storage().ref('/User/'+userId+ filename);
 
             // On envoi le fichier à Firebase
             let upload = storageRef.put(selectedFile);
@@ -63,35 +125,59 @@ $(document).ready(function() {
             
                 // On remplace l'URL de l'image par la nouvelle
                     $('#profil').attr('src', downloadUrl);
-                    $('#logo-setting').attr('src', downloadUrl)
+                    $('#logo-setting').attr('src', downloadUrl)      
 
+            }) 
+        });// call
 
-                        $('#enregister').click(function(e){
-                            e.preventDefault();
-                            console.log(downloadUrl)
+        $('#enregister').click(function(e){
+            e.preventDefault();
+            disable();
 
-                             let username = $('#username').val();
+                let profil = $('#profil').attr('src');
+                
+                let username = $('#username').val();
+                let inpUser = $('#username');
 
-                                
-                            $.ajax({
-                                    type: "POST", 
-                                    url: "/admin/users/edit", 
-                                    data: JSON.stringify({
-                                        "downloadUrl": downloadUrl,
-                                        "username": username,
-                                    }),
-                                    async: true,
-                                    success: function(responseText) {
-                                        console.log('ici succes');
-                                    },
-                                    error: function (error) {
-                                        console.log(error);
-                                    }
-                            });
+                let dataUsername = inputUsername(username,inpUser);
+                
 
-                        });       
+            $.ajax({
+                type: "PUT", 
+                url: "https://webradio-stream.herokuapp.com/authorized/users/"+userId, 
+                headers: {
+                    'Authorization':'Bearer ' + token
+                },
+                data: {
+                    avatar: profil,
+                    username: dataUsername,
+                    
+                },
+            }).done((response)=>{
+                reset();
 
-            });// i
+                if(response.message != undefined)
+                {
+                    $('#updatecompte').html(response.message);
+                    $('#updatecompte').css("display","block");
+
+                    console.log(response.message);
+                }
+                console.log(response);
+
+            }).fail((error)=>{
+                reset();
+
+                console.log(error);
+
+            });//fin
+
+        }); //onclick
+
+        }).fail((error)=>{
+
+            console.log(error);
+
         });
 
     }
@@ -99,6 +185,5 @@ $(document).ready(function() {
     });
 
     
-});
 
 </script>

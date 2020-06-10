@@ -18,6 +18,9 @@
 
 $(document).ready(function() {
 
+    $("#login").attr("value", "Connexion");
+    $('#inscription').attr("value", "Inscription");
+
     let store = true;
     const token = localStorage.getItem("token");
 
@@ -219,7 +222,7 @@ function inputPassword(inputData, input){
 
 });// fin register
 
-
+    
     //login
 
     $("#login").click(function(e){
@@ -345,9 +348,6 @@ function inputPassword(inputData, input){
             
 
     });// fin login
-
-
-    
 
 
 

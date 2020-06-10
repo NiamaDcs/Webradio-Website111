@@ -79,17 +79,15 @@ function inputEmail(inputData, input){
     }
 
 
-
     let firebaseConfig;
     let downloadUrl;
 
     $.ajax({
     method: "GET", 
     url: "/firebase", 
-    async: true,
-    success: function(data) {
-    //console.log(data.apiKey+" "+data.authDomain+" "+data.databaseURL+" "+data.projectId+" "+data.storageBucket);
-    
+    })
+    .done(function(data) {
+     
         firebaseConfig = {
             apiKey: data.apiKey,
             authDomain: data.authDomain,
@@ -129,62 +127,73 @@ function inputEmail(inputData, input){
                     $('#logo-setting').attr('src', downloadUrl)
    
 
-            });// i
-        });
+            });
+        }); // download
 
-    $('#saveUser').click(function(e){
-        e.preventDefault();
-        disable();
+        $('#saveUser').click(function(e){
+            e.preventDefault();
+            disable();
 
-        let email = $('#email').val();
-        let inpEmail = $('#email');
+            let email = $('#email').val();
+            let inpEmail = $('#email');
 
-        let username = $('#username').val();
-        let inpUser = $('#username');
+            let username = $('#username').val();
+            let inpUser = $('#username');
 
-        let createEmail = inputEmail(email,inpEmail);
-        let createUser = inputUsername(username,inpUser);
+            let createEmail = inputEmail(email,inpEmail);
+            let createUser = inputUsername(username,inpUser);
 
-        let profilUrl = $('#profil').attr('src');
+            let profilUrl = $('#profil').attr('src');
 
-        const token = localStorage.getItem("token");
+            const token = localStorage.getItem("token");
 
-        if(token !== "" || createUser !== undefined || createEmail !== undefined){
-            $.ajax({
-                type: "POST", 
-                url: "/admin/users/new", 
-                data: JSON.stringify({
-                    "token": token,
-                    "avatar": profilUrl,
-                    "username": createUser,
-                    "email": createEmail,
+            if(token !== "" || createUser !== undefined || createEmail !== undefined){
 
-                }),
-                dataType: 'json',
-                async: true,
-                success: function(data) {
+
+                $.ajax({
+                    type: "POST", 
+                    url: "https://webradio-stream.herokuapp.com/authorized/users/create", 
+                    headers: {
+                        'Authorization':'Bearer ' + token
+                    },
+                    data: {
+                        avatar: profilUrl,
+                        username: createUser,
+                        email: createEmail,
+                    },
+                }).done((response)=>{
                     reset();
 
-                    if(data != undefined){
-    
+                    if(response.message != undefined)
+                    {
                         $('#newcompte').html(response.message);
                         $('#newcompte').css("display","block");
+
+                        console.log(response.message);
                     }
-                    console.log(data);
-                },
-                error: function (error) {
+                    console.log(response);
+
+                }).fail((error)=>{
                     reset();
+
                     console.log(error);
-                }
-            });
-        }// if
 
-    }); // fin onclick   
+                });//fin
 
-    }
+            }// if
+
+        }); // fin onclick 
+
+
+
+    })
+    .fail((error)=>{
+
+        console.log(error);
 
     });
 
+    
     
 });
 </script>

@@ -25,46 +25,89 @@ $(document).ready(function() {
             });
         });
 
+
         $.ajax({
-            type: "POST", 
-            url: "/admin/users/show", 
-            data: JSON.stringify({
-                "token": token,
-            }),
-            dataType: 'json',
-            async: true,
-            success: function(response) {
-
-                if(response != undefined) {
-
-                    let mytab;
-
-                    for(let i=0; i<response.users.length; i++){
-
-                        idUser = response.users[i].user_id;
-
-                        mytab += '<tr><td ><img class="rounded-circle" style=font-size:2em; width:31px; height:32px;" src="'+response.users[i].avatar
-                        +'" id="profil"></td><td >'+response.users[i].username
-                        +'</td><td >'+response.users[i].email
-                        +'</td><td >'+response.users[i].username
-                        +'</td><td >'+response.users[i].status
-                        +'</td><td ><a href="#bannirModal" data-toggle="modal" data-dismiss="modal" class="far fa-trash-alt fa-2x"></a><a href="{{ path("admin.users.edit", {id: '+idUser+'}) }}" class="fa-2x far fa-edit" id="'
-                        +response.users[i].user_id+'"></a></td></tr>';
-                    }
-                    
-                     $("#users-corps").append(mytab);
-                }
-                console.log(response);
-                
-            },
-            error: function (err) {
-                
-                console.log(err);
+            type: "GET", 
+            url: 'https://webradio-stream.herokuapp.com/authorized/users', 
+            headers: {
+                'Authorization':'Bearer ' + token
             }
-        }); //fin ajax
+        }).done((response)=>{
+            
+            if(response != undefined) {
+
+                let mytab;
+
+                for(let i=0; i<response.users.length; i++){
+
+                    mytab += '<tr><td ><img class="rounded-circle" style="font-size:2em; width:31px; height:32px;" src="'+response.users[i].avatar
+                    +'" id="profil"></td><td >'+response.users[i].username
+                    +'</td><td >'+response.users[i].email
+                    +'</td><td >'+response.users[i].username
+                    +'</td><td >'+response.users[i].status
+                    +'</td><td ><a href="#bannirModal" data-toggle="modal" data-dismiss="modal" id="'
+                    +response.users[i].user_id+'" class="far fa-trash-alt fa-2x"></a><a href="/admin/users/edit/'
+                    +response.users[i].user_id+'" class="fa-2x far fa-edit" id="'
+                    +response.users[i].user_id+'"></a></td></tr>';
+                }
+                
+                    $("#users-corps").append(mytab);
+
+                    $('.fa-edit').on("click", function(){
+
+                        let myId = $(this).attr("id");
+
+                       localStorage.setItem("idForUser", myId);
+
+                        console.log(myId);
+
+                    });
+
+                    $('.fa-trash-alt').on("click", function(){
+
+                        let deleteId = $(this).attr("id");
+
+                       localStorage.setItem("deleteUserId", deleteId);
+
+                        console.log(deleteId); 
+
+                    });// fin bannir
+            }
+            console.log(response);
+
+        }).fail((error)=>{
+            console.log(error);
+        });
+
+        /*
+        *Suppression d'utilisateur
+        */
+        $('#deleteUser').on("click", function(){
+
+            let user_id = localStorage.getItem("deleteUserId");
+
+              $.ajax({
+                type: "DELETE", 
+                url: "https://webradio-stream.herokuapp.com/authorized/users/delete/"+user_id, 
+                headers: {
+                    'Authorization':'Bearer ' + token
+                }
+            }).done((response)=>{
+
+                localStorage.removeItem("deleteUserId");
+                console.log(response.message);
+
+            }).fail((error)=>{
+
+                console.log(error);
+
+            });
+
+        });// fin delete
   
 
     }// fin if
+
 
 
 
