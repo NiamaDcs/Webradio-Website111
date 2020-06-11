@@ -20,15 +20,234 @@ console.log("je suis ici dans dash")
 
 $(document).ready(function() {
 
-    $.ajax({
-    method: "GET", 
-    url: "", 
-    async: true,
-    success: function(data) {
-        
-    }
+   const token = localStorage.getItem("token");
 
-});
+if(token !== "") {
+
+        /*
+        * Total de stream crée pour une chaîne
+        */
+
+        /*$.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/stream/"+idChannel,
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    $('nbStream').html(response.stream_crée);
+                    console.log(response.stream_crée);
+                }
+                console.log(response);
+
+        }).fail((error) =>{
+            
+            console.log(error);
+        });*/
+    // fin stream total pour chaine   
+
+
+        /*
+        * Total dAbonnée
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/subscribers",
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    /*$('#nbAbonne').html(response.favoris);
+                    console.log(response.favoris);*/
+                }
+                console.log(response);
+
+        }).fail((error) =>{
+            
+            console.log(error);
+        });// fin Total de favoris d'une chaîne
+
+
+        /*
+        * Total de plannification
+        */
+
+        /*$.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/stream/plan/5e96bc595ca841cb25233bf7",
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    $('#nbPlan').html(response.nombre_plannification);
+                    console.log(response.nombre_plannification);
+                }
+                console.log(response);
+
+        }).fail((error) =>{
+            
+            console.log(error);
+        });// 
+
+}//end if*/  
+
+
+        /*
+        * Total d'utilisateurs
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/users",
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    /*$('#nbAbonne').html(response.favoris);
+                    console.log(response.favoris);*/
+                }
+                console.log(response);
+
+        }).fail((error) =>{
+            
+            console.log(error);
+        });// fin Total d'utilisateurs
+
+
+        /*
+        * Total de stream crée
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/stream",
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    /*$('#nbAbonne').html(response.favoris);
+                    console.log(response.favoris);*/
+                }
+                console.log(response);
+
+        }).fail((error) =>{
+            
+            console.log(error);
+        });// fin Total de stream crée
+
+        /*
+        * Total de signalements
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/signalements",
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    /*$('#nbAbonne').html(response.favoris);
+                    console.log(response.favoris);*/
+                }
+                console.log(response);
+
+        }).fail((error) =>{
+            
+            console.log(error);
+        });// fin Total de signalements
+
+
+        /*
+        *  Total de chaînes inactives
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/channels/inactive",
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    /*$('#nbAbonne').html(response.favoris);
+                    console.log(response.favoris);*/
+                }
+                console.log(response);
+
+        }).fail((error) =>{
+            
+            console.log(error);
+        });// fin Total de chaînes inactives
+
+        /*
+        * Total d'utilisateurs inactifs
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/users/inactive",
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    /*$('#nbAbonne').html(response.favoris);
+                    console.log(response.favoris);*/
+                }
+                console.log(response);
+
+        }).fail((error) =>{
+            
+            console.log(error);
+        });// fin Total d'utilisateurs inactifs
+
+        /*
+        * Total utilisateurs actifs
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/users/active",
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    /*$('#nbAbonne').html(response.favoris);
+                    console.log(response.favoris);*/
+                }
+                console.log(response);
+
+        }).fail((error) =>{
+            
+            console.log(error);
+        });// fin Total utilisateurs actifs
+
 
 });
 

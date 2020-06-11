@@ -210,9 +210,9 @@ function inputPassword(inputData, input){
                 reset();
 
                 $('#register-alert').css("display", "block");
-                $('#register-alert').html("les données entrées sont invalides!!");
+                $('#register-alert').html("Une erreur est survenue lors de l'éxecution Veuillez réessayer!");
 
-                console.log('les données entrées sont invalides!!');
+                console.log("Une erreur est survenue lors de l'éxecution Veuillez réessayer!");
                 console.log(error);
 
             });
@@ -338,7 +338,7 @@ function inputPassword(inputData, input){
                 reset();
 
                 $('#login-alert').css("display", "block");
-                $('#login-alert').html("les données entrées sont invalides!!");
+                $('#login-alert').html("Une erreur est survenue lors de l'éxecution Veuillez réessayer!");
 
                 console.log(error);
 
@@ -349,6 +349,9 @@ function inputPassword(inputData, input){
 
     });// fin login
 
+    $('#mylink').click(function(e){
+        
+    });
 
 
 

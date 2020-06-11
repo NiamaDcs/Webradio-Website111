@@ -438,8 +438,16 @@ a.btn.bouton-password{color: white; box-shadow: 0 6px 10px 0 #0000001a,0 1px 18p
     color: #212529;
     border-right: 2px solid #dee2e6;
 }
+#signal-table th, td {
+    
+    text-align: center;
+    width: 153px !important;
+    height: 50px !important;
+    color: #212529;
+    border-right: 2px solid #dee2e6;  
+}
 
-#channel-table tr {border: 1px solid #dee2e6;}#users-table tr {border: 1px solid #dee2e6;}
+#channel-table tr {border: 1px solid #dee2e6;}#users-table tr {border: 1px solid #dee2e6;}#signal-table tr{border: 1px solid #dee2e6;}
 
 /*#channel-table td:first-child td:last-child{
     

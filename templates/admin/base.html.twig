@@ -17,8 +17,8 @@
                     <h3 class="h3 mb-2 text-gray-800">Dashboard</h3>
                 </div>
 
-                    <!-- Content Row -->
-                    <div class="row">
+                <!-- Content Row -->
+                <div class="row">
 
                     <!-- Nombre d’utilisateurs Card Example -->
                     <div class="col-xl-3 col-md-6 mb-4">
@@ -41,7 +41,7 @@
                             <div class="row">
                                 <div class="col mr-2 mb-2 d-flex flex-column align-items-center justify-content-center">
                                     <div class="text-bleue">Nombre d’abonnés</div>
-                                    <div id="nombre_dabonnes" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                    <div id="nombre_dabonnes" class="h5 mb-0 font-weight-bold text-gray-800" id="nbAbonne"></div>
                                 </div>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col mr-2 d-flex flex-column align-items-center justify-content-center">
-                                    <div class="text-turquoise">Total d'écoutes</div>
+                                    <div class="text-turquoise">Total d'utilisateurs inactifs</div>
                                     <div id="total_decoutes" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                                 </div>
                             </div>
@@ -73,11 +73,73 @@
                                 </div>
                             </div>
                         </div>
-                        </div>
                     </div>
                 </div>
+            </div>
+            <!-- /Content Row -->
 
-                <!-- /Content Row -->
+            <!-- 2eme range -->
+                <div class="row">
+                    <!-- Nombre d’utilisateurs Card Example -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card shadow h-80 border-raduis py-2">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col mr-2 mb-2 d-flex flex-column align-items-center justify-content-center">
+                                    <div class="text-bleue justify-content-center"> Total de chaînes inactives</div>
+                                    <div id="nombre_dutilisateurs" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Total utilisateurs actifs Card Example -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card shadow h-80 border-raduis py-2">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col mr-2 mb-2 d-flex flex-column align-items-center justify-content-center">
+                                    <div class="text-turquoise justify-content-center">Total utilisateurs actifs</div>
+                                    <div id="nombre_dutilisateurs" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Nombre d’utilisateurs Card Example -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card shadow h-80 border-raduis py-2">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col mr-2 mb-2 d-flex flex-column align-items-center justify-content-center">
+                                    <div class="text-purple justify-content-center">Total de signalements</div>
+                                    <div id="nombre_dutilisateurs" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Nombre d’utilisateurs Card Example -->
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card shadow h-80 border-raduis py-2">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col mr-2 mb-2 d-flex flex-column align-items-center justify-content-center">
+                                    <div class="text-principal justify-content-center">Total chaîne bannie</div>
+                                    <div id="nombre_dutilisateurs" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /content Row -->
+
+
                     <!-- Content Row -->
                     <div class="row">
 
@@ -124,6 +186,7 @@
                     </div>
                 </div>
                 <!-- /Content Row -->
+
             </div>
             <!-- /.container-fluid -->
 

@@ -14,7 +14,17 @@ use Unirest;
 */
 class SignalAdController extends BaseController 
 {
+    /**
+     * @Route("/", name="admin.signal.index")
+     *
+     * @return void
+     */
     public function index()
+    {
+        return $this->render('admin/signalements/base.html.twig');
+    }
+
+    public function edit()
     {
         
     }
