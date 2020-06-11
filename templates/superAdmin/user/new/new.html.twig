@@ -21,6 +21,8 @@
                 </div>
                 <div class="main d-flex flex-column align-items-center justify-content-center">
 
+                    <div class="row col-xl-12 alert alert-success text-center"  style="display: none;" id="newcompte" role="alert"></div>
+
                     <div class="image-upload">
                         <label for="cameraInput">
                             <img src="{{ asset('assets/element-1.png') }}" alt="" id="profil">
@@ -32,17 +34,16 @@
                     <!--input-->
                     <div class="row mb-5">
                         <div class="col-sm">
-                            <div class="form-group adduser" id="name">
+                            <div class="form-group adduser">
                                 <input type='text' id="username" class='form-control text-center text-black' placeholder='Username' value=''>
                             </div>
-                            <div class="form-group adduser" id="emailadd">
+                            <div class="form-group adduser">
                                 <input type='text' id="email" class='form-control text-center text-black' placeholder='Email' value=''>
                             </div>
                             
                             <div class="form-group adduser">
                                 <input type="button" id="saveUser" class="form-control border-0 font-weight-bold text-white"  style="background-color:#EF0051;" value="Ajouter">
                             </div>
-                            {#{ include('superadmin/user/_form.html.twig') }#}
                         </div>
                     </div>
                     

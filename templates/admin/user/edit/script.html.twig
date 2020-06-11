@@ -19,7 +19,7 @@ $(document).ready(function() {
 String.prototype.rtrim = function() {
     return this.replace(/\s+$/, "");
 }
-
+    // fonction pour la verification de la valeur input
     function inputUsername(inputData,input){
     let usernameData = inputData.rtrim();
     let usernameInput = input;
@@ -130,6 +130,7 @@ String.prototype.rtrim = function() {
             }) 
         });// call
 
+        //evennement qui se declanche lorqu'on clique sur enregistrer
         $('#enregister').click(function(e){
             e.preventDefault();
             disable();
@@ -141,7 +142,7 @@ String.prototype.rtrim = function() {
 
                 let dataUsername = inputUsername(username,inpUser);
                 
-
+            //envoi de la mise a jour de l'utilisateur
             $.ajax({
                 type: "PUT", 
                 url: "https://webradio-stream.herokuapp.com/authorized/users/"+userId, 
