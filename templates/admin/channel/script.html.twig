@@ -23,54 +23,6 @@ $(document).ready(function() {
 
     if(token !== ""){
 
-       /* $.ajax({
-            type: "POST", 
-            url: "$channelId", 
-            data: JSON.stringify({
-                "token": token,
-            }),
-            dataType: 'json',
-            async: true,
-            success: function(response) {
-
-                if(response != undefined) {
-
-                    let mytab;
-                    let idChannel;
-
-                    for(let i=0; i<response.channels.length; i++){
-                        idChannel = response.channels[i]._id;
-
-                        mytab += '<tr><td ><img class="rounded-circle" style="font-size:2em; width:31px; height:32px;" src="'+response.channels[i].avatar
-                        +'" id="profil"></td><td >'+response.channels[i].channel_name
-                        +'</td><td >'+response.channels[i].status
-                        +'</td><td ><a href="#bannirModal" data-toggle="modal" data-dismiss="modal" class="far fa-trash-alt fa-2x"></a><a href="/admin/channel/edit/'+response.channels[i]._id+'" class="fa-2x far fa-edit" id="'
-                        +response.channels[i]._id+'"></a></td></tr>';
-                    }
-                    
-                    $("#channels-corps").append(mytab);
-
-                    $('.fa-edit').on("click", function(){
-
-                        let myId = $(this).attr("id");
-
-                       localStorage.setItem("userChannelId", myId);
-
-
-                        console.log(myId);
-
-                    });
-                }
-
-
-                console.log(response);
-                
-            },
-            error: function (err) {
-                
-                console.log(err);
-            }
-        }); //fin ajax*/
 
         $.ajax({
             type: "GET",

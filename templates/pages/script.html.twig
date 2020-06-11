@@ -18,8 +18,6 @@
 
 $(document).ready(function() {
 
-    $("#login").attr("value", "Connexion");
-    $('#inscription').attr("value", "Inscription");
 
     let store = true;
     const token = localStorage.getItem("token");
@@ -45,10 +43,50 @@ $(document).ready(function() {
 
                     for(let i=0; i<4; i++) {
 
-                        mytab += "<tr><td><img class='img-radio' src='"+response.radios[i].logo+"' alt=''></td><td style='color: black;'>"+response.radios[i].radio_name+"</td><td><audio class='myaudio' id='track'><source src='"+response.radios[i].Stream.direct_url+"' type='audio/mp3' />Rien</audio><div id='player-container'><div id='play-pause"+i+"' class='play'>Play</div></div></td></tr>"; 
+                        mytab += "<tr><td><img class='img-radio' src='"+response.radios[i].logo+"' alt=''></td><td style='color: black;'>"+response.radios[i].radio_name+"</td><td><audio class='myaudio' id='track-"+response.radios[i]._id+"'><source src='"+response.radios[i].Stream.direct_url+"' type='audio/mp3' />Rien</audio><div id='player-container'><div id='play-pause' class='play playPause' data-id='"+response.radios[i]._id+"'>Play</div></div></td></tr>"; 
                     }
 
-                $("#list-radio").html(mytab);
+                $("#list-radio").append(mytab);
+                   
+
+                   function stopAll() {
+
+                        $('.playPause').each(function(){
+
+                            if(track.play()){
+                                
+                                track.pause();
+                                $(this).removeClass('pause');
+                            }
+                        });
+                    }
+
+                $('.playPause').click(function() {
+
+                    // une boucle pour voir si mes balises ont en play et le mettre ne pause each
+                    //$("#track-"+id)
+
+                    const id = $(this).data("id");
+                    let track =  document.getElementById("track-"+id); 
+                    
+                    stopAll();
+
+                    if(track.paused) {
+
+                        track.play();
+
+                        $(this).addClass('pause');
+
+                    }else {
+
+                        track.pause();
+
+                        $(this).removeClass('pause');
+                    }
+                
+       
+                });
+
             }
             else console.log('failed');
 
@@ -57,27 +95,6 @@ $(document).ready(function() {
         }).fail((error)=>{
             console.log(error);
         });
-
-   
-    
-    let track =  document.getElementById("track");
-   
-    
-    function playPause1 () {
-
-        if(track.paused) {
-
-            track.play();
-            $("#play-pause1").addClass('pause');
-        }else {
-            track.pause();
-            $("#play-pause1").removeClass('pause');
-        }
-    } //fin 1
-
-    $('#play-pause1').click(function() {
-        playPause1();
-    });// cli 1
 
     
 
@@ -276,10 +293,16 @@ function inputPassword(inputData, input){
 
                             let role = data.user[0].role;
 
-                            if(role === "ROLE_SUPER_ADMIN"){
+                            if(role === "SUPERADMIN"){
+
+                                localStorage.setItem("username", data.user[0].username);
+                                localStorage.setItem("email", data.user[0].email);
+                                localStorage.setItem("password", data.user[0].password);
+                                localStorage.setItem("avatar", data.user[0].avatar);
+                                
                                 setTimeout(function(){
 
-                                    window.location.href = "/";
+                                    window.location.href = "/superadmin";
 
                                 }, 2000);
 
@@ -333,14 +356,14 @@ function inputPassword(inputData, input){
 
                 console.log(response);
 
-            }).fail((error)=> {
+            }).fail((err)=> {
 
                 reset();
 
                 $('#login-alert').css("display", "block");
                 $('#login-alert').html("Une erreur est survenue lors de l'éxecution Veuillez réessayer!");
 
-                console.log(error);
+                console.log(err.responseJSON.error);
 
             });
 
@@ -350,7 +373,16 @@ function inputPassword(inputData, input){
     });// fin login
 
     $('#mylink').click(function(e){
-        
+
+        $.ajax({
+
+        }).done(function (response){
+
+            console.log(response);
+
+        }).fail((error) =>{
+            console.log(error);
+        })
     });
 
 

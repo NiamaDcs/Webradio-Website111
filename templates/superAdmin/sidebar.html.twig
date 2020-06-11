@@ -2,7 +2,7 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center mt-5" href="{{ path('superadmin.setting.index', {'id': app.user.id}) }}">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center mt-5" href="{{ path('superadmin.setting.index')}}">
         <div class="sidebar-brand-text mx-2">Super-Administrateur</div>
     </a>
 
@@ -40,14 +40,14 @@
 
     <!-- Nav Item - signalements -->
     <li class="nav-item active">
-        <a class="nav-link d-flex align-items-center justify-content-center" href="{{ path('superadmin.Signalements.index') }}">
+        <a class="nav-link d-flex align-items-center justify-content-center" href="{{ path('superadmin.signal.index') }}">
             <span>Signalements</span>
         </a>
     </li>
    
       <!-- Nav Item - notifications -->
     <li class="nav-item active">
-        <a class="nav-link d-flex align-items-center justify-content-center" href="{{ path('superadmin.notifications.index') }}">
+        <a class="nav-link d-flex align-items-center justify-content-center" href="{{ path('superadmin.notification') }}">
             <span>Notifications</span>
         </a>
     </li>

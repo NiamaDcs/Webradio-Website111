@@ -13,37 +13,24 @@ use Unirest;
  */
 class ChannelSuperController extends BaseController {
 
-     /**
-    * @Route("/", name="superadmin.channel.index",  methods={"GET"})
+    /**
+    * @Route("/", name="superadmin.channel.index")
     */
-    public function index(Request $request) 
+    public function index() 
     {
-        return $this->render('superadmin/channel/base.html.twig');
-    }
+        return $this->render('superAdmin/channel/base.html.twig');
+    }    
 
     /**
-    * @Route("/show", name="superadmin.channel.show",  methods={"POST"})
-    */
-    public function getAllChannel()
-    {
-
-    }
-
-    /*
-     * @Route("/{id}/edit", name="superadmin.channel.edit", methods={"GET","POST"})
+     * @Route("/edit/{id}", name="superadmin.channel.edit")
      */
-    public function edit(Request $request)
+    public function edit()
     {
-
+        return $this->render('superAdmin/channel/editChannel/editChannel.html.twig');
     }
+   
 
-    /*
-    * @Route("/{id}", name="superadmin.channel.bannir", methods={"GET","POST"})
-    */
-    public function bannir(Request $request)
-    {
-
-    }
+    
 }
 
 

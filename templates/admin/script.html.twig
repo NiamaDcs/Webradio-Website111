@@ -22,32 +22,7 @@ $(document).ready(function() {
 
    const token = localStorage.getItem("token");
 
-if(token !== "") {
-
-        /*
-        * Total de stream crée pour une chaîne
-        */
-
-        /*$.ajax({
-            type: "GET",
-            url: "https://webradio-stream.herokuapp.com/authorized/stats/stream/"+idChannel,
-            headers: {
-                'Authorization':'Bearer ' + token
-            }
-        }).done((response) =>{
-            
-                if(response != undefined)
-                {
-                    $('nbStream').html(response.stream_crée);
-                    console.log(response.stream_crée);
-                }
-                console.log(response);
-
-        }).fail((error) =>{
-            
-            console.log(error);
-        });*/
-    // fin stream total pour chaine   
+    if(token !== "") {
 
 
         /*
@@ -79,7 +54,7 @@ if(token !== "") {
         * Total de plannification
         */
 
-        /*$.ajax({
+        $.ajax({
             type: "GET",
             url: "https://webradio-stream.herokuapp.com/authorized/stats/stream/plan/5e96bc595ca841cb25233bf7",
             headers: {
@@ -98,8 +73,6 @@ if(token !== "") {
             
             console.log(error);
         });// 
-
-}//end if*/  
 
 
         /*
@@ -141,8 +114,8 @@ if(token !== "") {
             
                 if(response != undefined)
                 {
-                    /*$('#nbAbonne').html(response.favoris);
-                    console.log(response.favoris);*/
+                    $('#nbAbonne').html(response.stream_crée);
+                    console.log(response.stream_crée);
                 }
                 console.log(response);
 
@@ -224,6 +197,8 @@ if(token !== "") {
             console.log(error);
         });// fin Total d'utilisateurs inactifs
 
+
+
         /*
         * Total utilisateurs actifs
         */
@@ -247,6 +222,8 @@ if(token !== "") {
             
             console.log(error);
         });// fin Total utilisateurs actifs
+
+    }//end if  
 
 
 });

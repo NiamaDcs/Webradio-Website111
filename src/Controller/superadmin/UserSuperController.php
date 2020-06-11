@@ -18,32 +18,26 @@ class UserSuperController extends BaseController
     */
     public function index()
     {
-
+        return $this->render('superAdmin/user/index.html.twig');
     }
 
     /**
-    * @Route("/new", name="superadmin.users.new", methods={"GET","POST"})
+    * @Route("/new", name="superadmin.users.new")
     */
-    public function new(Request $request)
+    public function new()
     {
-
+        return $this->render('superAdmin/user/new/new.html.twig');
     }
 
     /**
-     * @Route("/{id}/edit", name="superadmin.users.edit", methods={"GET","POST"})
+     * @Route("/edit/{id}", name="superadmin.users.edit")
      */
-    public function edit(Request $request)
+    public function edit()
     {
-
+        return $this->render('superAdmin/user/edit/edit.html.twig');
     }
 
-    /**
-    * @Route("/{id}", name="superadmin.user.bannir", methods={"GET","POST"})
-    */
-    public function bannir()
-    {
-
-    }
+    
 
     
 
