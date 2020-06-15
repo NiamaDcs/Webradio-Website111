@@ -49,17 +49,24 @@ $(document).ready(function() {
                 $("#list-radio").append(mytab);
                    
 
-                   function stopAll() {
+                  /* function stopAll() {
 
-                        $('.playPause').each(function(){
+                        if(store){
+                            $('.playPause').each(function(){
 
-                            if(track.play()){
-                                
-                                track.pause();
-                                $(this).removeClass('pause');
-                            }
-                        });
-                    }
+                                if(track.play()){
+                                    
+                                    track.pause();
+                                    $(this).removeClass('pause');
+                                }
+                            });
+
+                            store = true;
+                        }
+
+                        store = false
+                       
+                    }*/
 
                 $('.playPause').click(function() {
 
@@ -69,7 +76,7 @@ $(document).ready(function() {
                     const id = $(this).data("id");
                     let track =  document.getElementById("track-"+id); 
                     
-                    stopAll();
+                   // if (store) stopAll();
 
                     if(track.paused) {
 
@@ -216,7 +223,43 @@ function inputPassword(inputData, input){
 
                 if(response.message != undefined)
                 {
-                    
+                    $('#register-success').css("display", "block");
+                    $('#register-success').html(response.message);
+
+                    let mytoken = response.message.token;
+
+                    $.ajax({
+                        type: "GET",
+                        url: 'https://webradio-stream.herokuapp.com/authorized/users/logged',
+                        headers: {
+                            'Authorization':'Bearer ' + mytoken
+                        }
+                    })
+                    .done(function( data ) {
+
+                        localStorage.setItem("username", data.user[0].username);
+                        localStorage.setItem("avatar", data.user[0].avatar);
+                        localStorage.setItem("password", data.user[0].password);
+                        localStorage.setItem("userId", data.user[0].user_id); 
+                        localStorage.setItem("channelId", data.user[0].channel_id); 
+                        localStorage.setItem("status", data.user[0].status);
+                        localStorage.setItem("email", data.user[0].email);
+
+                            setTimeout(function(){
+
+                                window.location.href = "/profile";
+
+                            }, 2000);
+
+                    }).fail((err) =>{
+
+                        $('#register-alert').css("display", "block");
+            
+                        $('#register-alert').html(err.responseJSON.message);
+
+                        console.log(err);
+                        
+                    });
                 }
                 else console.log('failed');
 
@@ -321,6 +364,12 @@ function inputPassword(inputData, input){
 
                             }else if(role === "ROLE_USER"){
 
+                                let statusUser = data.user[0].status;
+
+                                if(statusUser === "B") {
+
+                                }
+
                                 localStorage.setItem("username", data.user[0].username);
                                 localStorage.setItem("avatar", data.user[0].avatar);
                                 localStorage.setItem("password", data.user[0].password);
@@ -363,7 +412,7 @@ function inputPassword(inputData, input){
                 $('#login-alert').css("display", "block");
                 $('#login-alert').html("Une erreur est survenue lors de l'éxecution Veuillez réessayer!");
 
-                console.log(err.responseJSON.error);
+                console.log(err.responseJSON.message);
 
             });
 
@@ -372,18 +421,36 @@ function inputPassword(inputData, input){
 
     });// fin login
 
-    $('#mylink').click(function(e){
+    $('#passwordLost').click(function(e){
+
+        let emailForgotPass = $('#forgot_pass_email').val();
+        let InpPassForgot = $('#forgot_pass_email');
+
+        let loginEmail = inputEmail(emailForgotPass,InpPassForgot);
 
         $.ajax({
-
+            type: "POST",
+            url:"https://webradio-stream.herokuapp.com/auth/forgot/password",
+            data: {
+                email: loginEmail,
+            }
         }).done(function (response){
 
+            if(response != undefined) {
+                $("#passwordLost").attr("data-target", "#confirmModal")
+            }
             console.log(response);
 
-        }).fail((error) =>{
-            console.log(error);
+        }).fail((err) =>{
+
+            $('#passwordLost-danger').css("display", "block");
+            
+            $('#passwordLost-danger').html(err.responseJSON.message);
+
+            console.log(err.responseJSON.message);
         })
     });
+
 
 
 

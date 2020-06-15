@@ -471,7 +471,7 @@ a.btn.bouton-password{color: white; box-shadow: 0 6px 10px 0 #0000001a,0 1px 18p
     }
     .modal-dialog.passwordLost {
         width: 300px !important;
-        height: 210px !important;
+        height: 270px !important;
     }
 
  }
@@ -667,7 +667,8 @@ a.far.fa-trash-alt.fa-2x :hover {
 }
 .modal-dialog.passwordLost {
     width: 300px !important;
-    height: 210px !important;
+    height: 270px !important;
+    border-radius: 12%;
 }
 
 .modal {
