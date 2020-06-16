@@ -410,7 +410,7 @@ function inputPassword(inputData, input){
                 reset();
 
                 $('#login-alert').css("display", "block");
-                $('#login-alert').html("Une erreur est survenue lors de l'éxecution Veuillez réessayer!");
+                $('#login-alert').html(err.responseJSON.message.message);
 
                 console.log(err.responseJSON.message);
 

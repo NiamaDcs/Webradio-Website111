@@ -80,54 +80,115 @@ $(document).ready(function() {
         });
     }
 
+    let idChannel = localStorage.getItem("channelId");
 
 
+    if(token !== "" || idChannel !=="") {
 
+        /*
+        * affiche une chaine 
+        */
 
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/channels/"+idChannel,
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
 
-        /*$.ajax({
-            type: "POST", 
-            url: "/profile/show", 
-            data: JSON.stringify({
-                "token": token,
-            }),
-            dataType: 'json',
-            async: true,
-            success: function(response) {
-
-                if(response != undefined){
-                   $('#myname').html(response.user[0].username);
-                    $('#logo-setting').attr('src', response.user[0].avatar);
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    $('#channels').attr('value', response.channel.channel_name);
+                    $('#profil').attr('src', response.channel.avatar);
+                    $('#nbEcoute').html(response.channel.nbr_ecoute);
                 }
                 console.log(response);
-                
-            },
-            error: function (err) {
-                
-                console.log(err);
-            }
+
+        }).fail((error) =>{
+            
+            console.log(error);
         });
-    }else{
-        store = false;
-        localStorage.removeItem('token');
 
-         window.location.href = '/';
-
-        console.log("Vous êtes deconnecté");
-    }*/
-
-
-
-    $('#deconnecter').click(function(e){
         
-        if(token !== null){
 
-            store = false;
-            localStorage.removeItem('token');
-            console.log("Vous êtes deconnecté");
-        }
-        
-    });
+        /*
+        * Total de stream crée pour une chaîne
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/stream/"+idChannel,
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    $('nbStream').html(response.stream_crée);
+                    console.log(response.stream_crée);
+                }
+                console.log(response);
+
+        }).fail((error) =>{
+            
+            console.log(error);
+        });
+        // fin stream total pour chaine   
+
+
+        /*
+        * Total de favoris d'une chaîne
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/stream/plan/5e96bc595ca841cb25233bf7",
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    $('#nbFavoris').html(response.favoris);
+                    console.log(response.favoris);
+                }
+                console.log(response);
+
+        }).fail((error) =>{
+            
+            console.log(error);
+        });// fin Total de favoris d'une chaîne
+
+
+        /*
+        * Total de plannification pour un utilisateur
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/stream/plan/"+idChannel,
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    $('#nbPlan').html(response.nombre_plannification);
+                    console.log(response.nombre_plannification.message);
+                }
+                console.log(response);
+
+        }).fail((error) =>{
+            
+            console.log(error);
+        });// 
+
+    }
  
 });
  </script>

@@ -10,9 +10,24 @@
 
 <!-- Custom scripts for all pages-->
 <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
+
 <script>
 
 $(document).ready(function() {
+
+    $.ajax({
+
+    }).done( (response) => {
+
+        console.log(response);
+
+    }).fail( (err) => {
+
+        console.log(err);
+    })
+});
+
+/*$(document).ready(function() {
 
     let firebaseConfig;
     let downloadUrl;
@@ -41,7 +56,7 @@ $(document).ready(function() {
         let selectedFile = event.target.files[0];
 
         let filename = $('#musicInput').val().replace(/C:\\fakepath\\/i, '');
-        let storageRef = firebase.storage().ref('/User/libray/{{ app.user.id }}' + filename);
+        let storageRef = firebase.storage().ref('/User/libray/' + filename);
 
             // On envoi le fichier à Firebase
             let upload = storageRef.put(selectedFile);
@@ -80,6 +95,6 @@ $(document).ready(function() {
 
     }
     });
-});
+});*/
 
 </script>
