@@ -97,7 +97,7 @@ div.rounded-circle.avatar{
     text-align: center;
     margin-bottom: 1rem;
     border-radius: 0.4rem;
-    padding: 0.3rem;
+    padding: 0.5rem;
     }
 .retour {
     width: 140px !important;
@@ -388,13 +388,8 @@ a.btn.bouton-password{color: white; box-shadow: 0 6px 10px 0 #0000001a,0 1px 18p
 }*/
 
 
-.couleur-principal{
-    background-color: #EF0051; 
-    color: #fff; 
-}
-.couleur-btn{
-    background-color: #007bff;
-    color: #fff;
+.btn.couleur-principal :hover {
+    color: inherit;
 }
 .card-body.calendar {
 
@@ -473,6 +468,12 @@ a.btn.bouton-password{color: white; box-shadow: 0 6px 10px 0 #0000001a,0 1px 18p
         width: 300px !important;
         height: 270px !important;
     }
+    #titreBibliotheque {    
+        font-size: 1.41rem;
+    }
+    .couleur-principal{ font-size: 0.7rem;}
+    .couleur-btn{ font-size: 0.7rem; }
+    h1.text-black{ font-size: 0.7rem; }
 
  }
  @media (max-width:575.98px){
@@ -492,6 +493,29 @@ a.btn.bouton-password{color: white; box-shadow: 0 6px 10px 0 #0000001a,0 1px 18p
         position: relative;
         right: 20px;
     }
+    a.d-block.mb-4.h-100 {
+        width: 82.30px;
+    }
+    .delete{
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        transform: translate(7px, -12px);
+        
+    }
+    .img-thumbnail{
+        height: auto;
+    }
+    p.text-center {
+        width: 82.30px;
+        font-size: 0.7rem;
+    }
+    #titreBibliotheque {    
+        font-size: 1.41rem;
+    }
+    .couleur-principal{ font-size: 0.7rem;}
+    .couleur-btn{ font-size: 0.7rem; }
+    h1.text-black{ font-size: 0.7rem; }
  }
  @media (min-width:576px) and (max-width:767px){
 
@@ -499,11 +523,34 @@ a.btn.bouton-password{color: white; box-shadow: 0 6px 10px 0 #0000001a,0 1px 18p
         width: 9vh;
         margin: auto;
     }
+    a.d-block.mb-4.h-100 {
+        width: 82.30px;
+    }
+    .delete{
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        transform: translate(-40px, -10px);
+        
+    }
+    .img-thumbnail{
+        height: auto;
+    }
+    p.text-center {
+        width: 82.30px;
+        font-size: 0.7rem;
+    }
+    #titreBibliotheque {    
+        font-size: 1.41rem;
+    }
 
+    .couleur-principal{ font-size: 0.7rem;}
+    .couleur-btn{ font-size: 0.7rem; }
+    h1.text-black{ font-size: 1.7rem; }
  }
 
 /* Medium devices (tablets, 768px and up)*/
-@media (min-width: 768px) { 
+@media (min-width: 768px) and (max-width: 991px) { 
     .logo-setting {
         width: 20vh;
         margin: auto;
@@ -542,6 +589,31 @@ a.btn.bouton-password{color: white; box-shadow: 0 6px 10px 0 #0000001a,0 1px 18p
         cursor: pointer;
     }
 
+    a.d-block.mb-4.h-100 {
+        width: 72.80px;
+    }
+
+    .delete{
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        transform: translate(15px, -10px);
+        
+    }
+    .img-thumbnail{
+        height: auto;
+    }
+    p.text-center {
+        width: 72.80px;
+        font-size: 0.7rem;
+    }
+    #titreBibliotheque {    
+        font-size: 1.41rem;
+    }
+    .couleur-principal{ font-size: 0.7rem;}
+    .couleur-btn{ font-size: 0.7rem; }
+    h1.text-black{ font-size: 1.7rem; }
+
  }
 
 /* Large devices (desktops, 992px and up)*/
@@ -574,7 +646,28 @@ a.btn.bouton-password{color: white; box-shadow: 0 6px 10px 0 #0000001a,0 1px 18p
         left: 20px
     }
     .avatar i.fa-3x.far.fa-edit{position: absolute;top: 90px;right: 90px; cursor: pointer;}
-
+    a.d-block.mb-4.h-100 {
+        width: 101.88px;
+    }
+    .delete{
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        transform: translate(-10px, -10px);
+        
+    }
+    .img-thumbnail{
+        height: auto;
+    }
+    p.text-center {
+        width: 101.88px;
+    }
+    #titreBibliotheque {    
+        font-size: 1.41rem;
+    }
+    .couleur-principal{ font-size: 0.7rem;}
+    .couleur-btn{ font-size: 0.7rem; }
+    h1.text-black{ font-size: 1.7rem; }
  }
 
 /* Extra large devices (large desktops, 1200px and up)*/
@@ -625,6 +718,22 @@ a.btn.bouton-password{color: white; box-shadow: 0 6px 10px 0 #0000001a,0 1px 18p
     .titre-setting{
         position: relative;
         left: 75px
+    }
+    a.d-block.mb-4.h-100 {
+        width: 145.88px;
+    }
+    .delete{
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        transform: translate(-10px, -10px);
+        
+    }
+    .img-thumbnail{
+        height: 100px;
+    }
+    p.text-center {
+        width: 145.88px;
     }
 
  }
@@ -726,11 +835,24 @@ table {
 
 .couleur-principal{
     background-color: #EF0051; 
-    color: #fff; 
+    color: #fff !important; 
+    text-decoration: none;
 }
+
+.couleur-principal:hover{
+    text-decoration: none;
+    color: #fff;
+    transform: scale(1.2)
+}
+
 .couleur-btn{
     background-color: #007bff;
+    color: #fff !important;
+}
+.couleur-btn:hover{
+    text-decoration: none;
     color: #fff;
+    transform: scale(1.2)
 }
 .calendar__table  td {
     padding: 10px;
@@ -869,4 +991,34 @@ label.bouton-ajout{
     top: 2px;
 }
 
+#mySong{
+    width: 100%;
+    padding: 0.5rem;
+}
+
+.img-thumbnail{
+    border: none !important;
+    background-color: inherit;
+}
+a.d-block.mb-4.h-100 {
+   text-decoration: none;
+   text-decoration-line: none;
+   color: #5a5c69;
+}
+
+a.d-block.mb-4.h-100 :hover {
+    color: #EF0051;
+}
+.text-dark-color {color: #5a5c69;}
+.delete{
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    
+}
+
+
+.btn :hover {
+    color: inherit;
+}
 

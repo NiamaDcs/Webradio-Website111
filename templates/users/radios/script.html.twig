@@ -12,126 +12,81 @@
 
 <script>
     
-    
-    /*function playPause1 () {
-
-        if(track.paused) {
-
-            track.play();
-            $("#play-pause1").addClass('pause');
-        }else {
-            track.pause();
-            $("#play-pause1").removeClass('pause');
-        }
-    } 
-
-     $('#play-pause1').click(function() {
-        playPause1();
-    }); //play1
-
-    function playPause2 () {
-
-        if(track.paused) {
-
-            track.play();
-            $("#play-pause2").addClass('pause');
-        }else {
-            track.pause();
-            $("#play-pause2").removeClass('pause');
-        }
-    } 
-
-     $('#play-pause2').click(function(e) {
-        playPause2();
-    }); //play2
-
-    function playPause3 () {
-
-        if(track.paused) {
-
-            track.play();
-            $("#play-pause3").addClass('pause');
-        }else {
-            track.pause();
-            $("#play-pause3").removeClass('pause');
-        }
-    } 
-
-     $('#play-pause3').click(function(e) {
-         console.log("play3");
-        playPause3();
-    }); //play3 */
-
-
 $(document).ready(function() {
 
-    let store = true;
-    const token = localStorage.getItem("token");
-
-    
-
-    if(token !== ""){
-
-        $.ajax({
-            type: "POST", 
-            url: "/radios/show", 
-            data: JSON.stringify({
-                "token": token,
-            }),
-            dataType: 'json',
-            async: true,
-            success: function(response) {
-
-                if(response != undefined){
-                    /*$('#myname').html(response.user[0].username);
-                    $('#logo-setting').attr('src', user.user[0].avatar);*/
-
-                     myradio = response.radios[0];
+    $.ajax({
+            type: "GET", 
+            url: 'https://webradio-stream.herokuapp.com/auth/radios/all', 
+        }).done((response)=>{
+            
+            if(response != undefined)
+            {
+                 myradio = response.radios[0];
                       let mytab;
 
                     for(let i=0; i<4; i++) {
 
-                        mytab += "<tr><td><img class='img-radio' src='"+response.radios[i].logo+"' alt=''></td><td style='color: black;'>"+response.radios[i].radio_name+"</td><td><audio class='myaudio' id='track'><source src='"+response.radios[i].Stream.direct_url+"' type='audio/mp3' />Rien</audio><div id='player-container'><div id='play-pause"+i+"' class='play'>Play</div></div></td></tr>";
-                        
+                        mytab += "<tr><td><img class='img-radio' src='"+response.radios[i].logo+"' alt=''></td><td style='color: black;'>"+response.radios[i].radio_name+"</td><td><audio class='myaudio' id='track-"+response.radios[i]._id+"'><source src='"+response.radios[i].Stream.direct_url+"' type='audio/mp3' />Rien</audio><div id='player-container'><div id='play-pause' class='play playPause' data-id='"+response.radios[i]._id+"'>Play</div></div></td></tr>"; 
                     }
-                    $("#list-radio").html(mytab);
 
-                }
-                console.log(response);
-               
+                $("#list-radio").append(mytab);
+                   
+
+                  /* function stopAll() {
+
+                        if(store){
+                            $('.playPause').each(function(){
+
+                                if(track.play()){
+                                    
+                                    track.pause();
+                                    $(this).removeClass('pause');
+                                }
+                            });
+
+                            store = true;
+                        }
+
+                        store = false
+                       
+                    }*/
+
+                $('.playPause').click(function() {
+
+                    // une boucle pour voir si mes balises ont en play et le mettre ne pause each
+                    //$("#track-"+id)
+
+                    const id = $(this).data("id");
+                    let track =  document.getElementById("track-"+id); 
+                    
+                   // if (store) stopAll();
+
+                    if(track.paused) {
+
+                        track.play();
+
+                        $(this).addClass('pause');
+
+                    }else {
+
+                        track.pause();
+
+                        $(this).removeClass('pause');
+                    }
                 
-            },
-            error: function (err) {
-                
-                console.log(err);
+       
+                });
+
             }
-        });
-    }else{
+            else console.log('failed');
+
+                console.log(response);
+
+        }).fail((error)=>{
+            console.log(error);
+        }); //fin radio
+
     
-        store = false;
-        localStorage.removeItem('token');
 
-         window.location.href = '/';
-
-        console.log("Vous êtes deconnecté");
-    }
-
-    let track =  document.getElementById("track");
-
-    function playPause0 () {
-
-        if(track.paused) {
-
-            track.play();
-            $("#play-pause0").addClass('pause');
-        }else {
-            track.pause();
-            $("#play-pause0").removeClass('pause');
-        }
-    } 
-
-     $('#play-pause0').click(function() {
-        playPause0();
-    }); //play0
 });
 </script>

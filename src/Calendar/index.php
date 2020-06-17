@@ -44,7 +44,7 @@ class MyCalendar {
         }
         $calendar.="</table>";
 
-        $calendar.="<a href='#' id='addEvent' class='calendar__button'>+</a></div>";
+        $calendar.="<a href='/profile/timeline' id='addEvent' class='calendar__button'>+</a></div>";
 
         return $calendar;
     }

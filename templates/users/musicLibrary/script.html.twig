@@ -15,48 +15,32 @@
 
 $(document).ready(function() {
 
-    $.ajax({
-
-    }).done( (response) => {
-
-        console.log(response);
-
-    }).fail( (err) => {
-
-        console.log(err);
-    })
-});
-
-/*$(document).ready(function() {
-
     let firebaseConfig;
+    let list = new Array();
     let downloadUrl;
 
     $.ajax({
-    method: "GET", 
-    url: "/profile/firebase", 
-    async: true,
-    success: function(data) {
-    //console.log(data.apiKey+" "+data.authDomain+" "+data.databaseURL+" "+data.projectId+" "+data.storageBucket);
-    
-        firebaseConfig = {
+        type: "GET",
+        url: "/firebase",
+    }).done( (data) => {
+
+            firebaseConfig = {
             apiKey: data.apiKey,
             authDomain: data.authDomain,
             databaseURL: data.databaseURL,
             projectId: data.projectId,
             storageBucket: data.storageBucket
         };
-        
+
         firebase.initializeApp(firebaseConfig);
 
-            // On détecte le changement de fichier
-    $('#musicInput').on('change', function() {
+        $('#musicInput').on('change', function() {
 
-        // On récupère le nouveau fichier
-        let selectedFile = event.target.files[0];
+            // On récupère le nouveau fichier
+            let selectedFile = event.target.files[0];
 
-        let filename = $('#musicInput').val().replace(/C:\\fakepath\\/i, '');
-        let storageRef = firebase.storage().ref('/User/libray/' + filename);
+            let filename = $('#musicInput').val().replace(/C:\\fakepath\\/i, '');
+            let storageRef = firebase.storage().ref('/User/libray/' + filename);
 
             // On envoi le fichier à Firebase
             let upload = storageRef.put(selectedFile);
@@ -72,29 +56,32 @@ $(document).ready(function() {
                 downloadUrl = upload.snapshot.downloadURL;
                 // On l'affiche
                  console.log(downloadUrl);
-
-                    $.ajax({
-                        method: "POST", 
-                        url: "/profile/library/new", 
-                        data: JSON.stringify({
-                            "filename": filename
-                        }),
-                        async: true,
-                        success: function(response) {
-                        
-                            console.log("sucess: "+filename);
-                        },
-                        error: function(error){
-                            console.log(error);
-                        }
-
-                    });
             });
 
-    });
+            let music = document.createElement("div");
 
-    }
-    });
-});*/
+            music.setAttribute("class","myMusic rounded");
+
+           // list.push(music);
+            let element = document.getElementById("mySong")
+            element.appendChild(music);
+
+        });
+
+        //$('#mySong').append('<div class="col-lg-3 col-md-4 col-6"><a href="#" class="d-block mb-4 h-100"><img src="https://i.pinimg.com/736x/06/2a/2c/062a2c6142605b83c340080137b84e57.jpg" alt="img sic" class="img-fluid img-thumbnail music" /><p>music mp3</p></a></div>')
+        for (let i=1; i<20; i++){
+
+            list.push('<div data-id=music"'+i+'" class="col-lg-2 col-md-2 col-4"><a href="#" class="d-block mb-4 h-100"><img src="https://i.pinimg.com/736x/06/2a/2c/062a2c6142605b83c340080137b84e57.jpg" alt="img sic" style="width: 145.88px;" class="img-fluid img-thumbnail music" /><p class="text-center">music'+i+'.mp3</p><span class="delete">&times;</span></a></div>');
+       
+        }
+        //list.push('<div class="col-lg-3 col-md-4 col-6"><a href="#" class="d-block mb-4 h-100"><img src="https://i.pinimg.com/736x/06/2a/2c/062a2c6142605b83c340080137b84e57.jpg" alt="img sic" class="img-fluid img-thumbnail music" /><p>music mp3 6</p></a></div>');
+        $('#mySong').html(list);
+        
+
+    }).fail( (err) => {
+
+        console.log(err);
+    })
+});
 
 </script>
