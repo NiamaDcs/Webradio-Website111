@@ -42,7 +42,7 @@ $(document).ready(function() {
     }*/
 
 
-    if(token !== "")
+    /*if(token !== "")
     {
         let channelId = localStorage.getItem("channelId");
         channelId = channelId;
@@ -78,7 +78,7 @@ $(document).ready(function() {
                 console.log(err);
             }
         });
-    }
+    }*/
 
     let idChannel = localStorage.getItem("channelId");
 
@@ -130,7 +130,7 @@ $(document).ready(function() {
                     $('nbStream').html(response.stream_crée);
                     console.log(response.stream_crée);
                 }
-                console.log(response);
+                console.log('total stream '+response);
 
         }).fail((error) =>{
             
@@ -154,7 +154,7 @@ $(document).ready(function() {
                 if(response != undefined)
                 {
                     $('#nbFavoris').html(response.favoris);
-                    console.log(response.favoris);
+                    //console.log(response.favoris);
                 }
                 console.log(response);
 
@@ -178,8 +178,8 @@ $(document).ready(function() {
             
                 if(response != undefined)
                 {
-                    $('#nbPlan').html(response.nombre_plannification);
-                    console.log(response.nombre_plannification.message);
+                   // $('#nbPlan').html(response.nombre_plannification);
+                    console.log('planification '+response);
                 }
                 console.log(response);
 

@@ -99,17 +99,32 @@ div.rounded-circle.avatar{
     border-radius: 0.4rem;
     padding: 0.5rem;
     }
+
+#bouton-ajout {
+    color: #fff; 
+    background-color:#EF0051; 
+    text-align: center;
+    margin-bottom: 1rem;
+    border-radius: 0.4rem;
+    padding: 0.5rem;
+
+}
+
 .retour {
     width: 140px !important;
     height: 40 !important;
     text-decoration-line: none !important;
 }
 
-.form-control.music{
+
+.card-body.planif1, .card-body.planif2{
     height: 150px!important;
     width: 100%;
     border-radius: 5px;
 }
+
+
+
 .field1, .field2{
     width: 700px !important;
     margin-left: 13.5rem;
@@ -991,7 +1006,7 @@ label.bouton-ajout{
     top: 2px;
 }
 
-#mySong{
+#mySong, #timeline, #timeline2{
     width: 100%;
     padding: 0.5rem;
 }

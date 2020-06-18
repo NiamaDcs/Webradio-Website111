@@ -94,7 +94,7 @@ class PlanningController extends BaseController{
     }
 
      /**
-     * @Route("/profile/timeline", name="profile.timeline.index")
+     * @Route("/timeline", name="profile.timeline.index")
      */
     public function timeline (): Response {
 
