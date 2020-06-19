@@ -66,8 +66,8 @@ $(document).ready(function() {
                         let deleteId = $(this).attr("id");
 
                        localStorage.setItem("deleteChannelId", deleteId);
-
-
+                       
+                             window.onload = load;
                         console.log(deleteId);
 
                     });
@@ -174,4 +174,6 @@ $(document).ready(function() {
    
 
 });
+
+
 </script>
