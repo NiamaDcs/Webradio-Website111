@@ -9,52 +9,129 @@
 <!-- Custom scripts for all pages-->
 <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
 
+<script src="../vendor/chart.js/Chart.min.js"></script>
+
+<!-- Page level custom scripts -->
+<script src="../js/demo/chart-area-demo.js"></script>
+<script src="../js/demo/chart-pie-demo.js"></script>
+
 <script>
  console.log("je suis ici banni");
 
 $(document).ready(function() {
-   
-   $.ajax({
-        method: "GET",
-        url:"/profile/radios",
-        async: true,
-        success: function(data) {
-            listradio = data[0];
+  
+ let store = true;
+ const token = localStorage.getItem("token");
 
-            console.log(listradio.radios[0].nom)
+    let idChannel = localStorage.getItem("channelId");
 
-            let mytab = $("#list-radio");
-            for(i=0; i<listradio.radios.length; i++)
-            {
-                mytab += "<tr><td><img class='img-radio' src='../../"+listradio.radios[i].avatar+"'</td><td>" +listradio.radios[i].nom+ "</td><td><audio class='myaudio' id='track'><source src='"
-                +listradio.radios[i].url+"' type='audio/mp3' />Rien</audio><div id='player-container'><div id='play-pause' class='play'>Play</div></div></td></tr>";    
+
+    if(token !== "" || idChannel !=="") {
+
+        /*
+        * affiche une chaine 
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/channels/"+idChannel,
+            headers: {
+                'Authorization':'Bearer ' + token
             }
-             $("#list-radio").append(mytab);
+
+        }).done((response) =>{
             
-
-            let track =  document.getElementById("track");
-            function playPause () {
-                if(track.paused) {
-
-                    track.play();
-                    $("#play-pause").addClass('pause');
-                }else {
-                    track.pause();
-                    $("#play-pause").removeClass('pause');
-                     console.log('ici');
+                if(response != undefined)
+                {
+                    $('#channels').attr('value', response.channel.channel_name);
+                    $('#profil').attr('src', response.channel.avatar);
+                    $('#nbEcoute').html(response.channel.nbr_ecoute);
                 }
+                console.log(response);
+
+        }).fail((error) =>{
+            
+            console.log(error);
+        });
+
+        
+
+        /*
+        * Total de stream crée pour une chaîne
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/stream/"+idChannel,
+            headers: {
+                'Authorization':'Bearer ' + token
             }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    $('nbStream').html(response.stream_crée);
+                    console.log(response.stream_crée);
+                }
+                console.log('total stream '+response);
 
-            $('#play-pause').click(function() {
-                playPause();
-            });
-        }
-    });
+        }).fail((error) =>{
+            
+            console.log(error);
+        });
+        // fin stream total pour chaine   
 
-    $('#paraph1').html("Nos administrateurs ont reçu un total de 758 signalements sur votre chaîne pour le(s) motif(s) suivants :<br> Vocabulaire antisémite ou apologie au terrorisme<br> Vocabulaire abusif");
-    $('#paraph2').html("Ces signalements ont étés fait vis à vis de ce(s) stream(s) que vous pouvez réécouter :<br> <a href='#'>www.fluxradiodemike7.webradiostream.com</a> réalisé le : 01/01/2020<br> <a href='#'>www.fluxradiodemike6.webradiostream.com</a> réalisé le : 25/12/2019");
-    $('#paraph3').html("Cette sanction est irrévocable et il n’est pas possible de ne plus être banni.<br> Si vous souhaitez contester ce bannissement, vous pouvez contacter notre service client à l’adresse email suivante :<br>mike.sylvestre@lyknowledge.io");
 
+        /*
+        * Total de favoris d'une chaîne
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/stream/plan/5e96bc595ca841cb25233bf7",
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    $('#nbFavoris').html(response.favoris);
+                    //console.log(response.favoris);
+                }
+                console.log(response);
+
+        }).fail((error) =>{
+            
+            console.log(error);
+        });// fin Total de favoris d'une chaîne
+
+
+        /*
+        * Total de plannification pour un utilisateur
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/stream/plan/"+idChannel,
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                   // $('#nbPlan').html(response.nombre_plannification);
+                    console.log('planification '+response);
+                }
+                console.log(response);
+
+        }).fail((error) =>{
+            
+            console.log(error);
+        });// 
+
+    }
 }); 
 
  </script>
