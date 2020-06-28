@@ -1,4 +1,9 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>-->
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
@@ -8,19 +13,128 @@
 <!-- Custom scripts for all pages-->
 <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
 
- <!-- Page level plugins -->
-  <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
-  <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
-
-  <!-- Page level custom scripts -->
-  <script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
 
 <script>
+
+
+$.fn.pageMe = function(opts){
+    var $this = this,
+        defaults = {
+            perPage: 7,
+            showPrevNext: false,
+            numbersPerPage: 5,
+            hidePageNumbers: false
+        },
+        settings = $.extend(defaults, opts);
+    
+    var listElement = $this;
+    var perPage = settings.perPage; 
+    var children = listElement.children();
+    var pager = $('.pagination');
+    
+    if (typeof settings.childSelector!="undefined") {
+        children = listElement.find(settings.childSelector);
+    }
+    
+    if (typeof settings.pagerSelector!="undefined") {
+        pager = $(settings.pagerSelector);
+    }
+    
+    var numItems = children.length;
+    var numPages = Math.ceil(numItems/perPage);
+
+    pager.data("curr",0);
+    
+    if (settings.showPrevNext){
+        $('<li class="page-item"><a href="#" class="prev-link page-link">«</a></li>').appendTo(pager);
+    }
+    
+    var curr = 0;
+    while(numPages > curr && (settings.hidePageNumbers==false)){
+        $('<li class="page-item"><a href="#" class="page-link page-compte">'+(curr+1)+'</a></li>').appendTo(pager);
+        curr++;
+    }
+  
+    if (settings.numbersPerPage>1) {
+       $('.page-compte').hide();
+       $('.page-compte').slice(pager.data("curr"), settings.numbersPerPage).show();
+    }
+    
+    if (settings.showPrevNext){
+        $('<li class="page-item"><a href="#" class="next-link page-link">»</a></li>').appendTo(pager);
+    }
+    
+    pager.find('.page-compte:first').addClass('active');
+    pager.find('.prev-link').hide();
+    if (numPages<=1) {
+        pager.find('.next-link').hide();
+    }
+  	pager.children().eq(1).addClass("active");
+    
+    children.hide();
+    children.slice(0, perPage).show();
+    
+    pager.find('li .page-compte').click(function(){
+        var clickedPage = $(this).html().valueOf()-1;
+        goTo(clickedPage,perPage);
+        return false;
+    });
+    pager.find('li .prev-link').click(function(){
+        previous();
+        return false;
+    });
+    pager.find('li .next-link').click(function(){
+        next();
+        return false;
+    });
+    
+    function previous(){
+        var goToPage = parseInt(pager.data("curr")) - 1;
+        goTo(goToPage);
+    }
+     
+    function next(){
+        goToPage = parseInt(pager.data("curr")) + 1;
+        goTo(goToPage);
+    }
+    
+    function goTo(page){
+        var startAt = page * perPage,
+            endOn = startAt + perPage;
+        
+        children.css('display','none').slice(startAt, endOn).show();
+        
+        if (page>=1) {
+            pager.find('.prev-link').show();
+        }
+        else {
+            pager.find('.prev-link').hide();
+        }
+        
+        if (page<(numPages-1)) {
+            pager.find('.next-link').show();
+        }
+        else {
+            pager.find('.next-link').hide();
+        }
+        
+        pager.data("curr",page);
+       
+        if (settings.numbersPerPage>1) {
+       		$('.page-compte').hide();
+       		$('.page-compte').slice(page, settings.numbersPerPage+page).show();
+    	}
+      
+      	pager.children().removeClass("active");
+        pager.children().eq(page+1).addClass("active");
+    
+    }
+};
+
 $(document).ready(function() {
 
     const token = localStorage.getItem("token");
     let IdChannel;
-
     if(token !== ""){
 
 
@@ -37,7 +151,14 @@ $(document).ready(function() {
 
                     let mytab;
 
-                    for(let i=0; i<response.channels.length; i++){
+                    let list = new Array(); // stock la donnee
+                    let pageList = new Array(); // garder une trace des element à afficher
+                    let currentPage = 1; //garde la trace où nous sommes
+                    let numberPerPage = 5; // le nombre par page
+                    let numberOfPage = 1; // le nombre total de page
+    
+
+                    for(let i=1; i<response.channels.length; i++) {
                         
                         mytab += '<tr><td ><img class="rounded-circle" style="font-size:2em; width:31px; height:32px;" src="'+response.channels[i].avatar
                         +'" id="profil"></td><td >'+response.channels[i].channel_name
@@ -45,9 +166,11 @@ $(document).ready(function() {
                         +'</td><td ><a href="#bannirModal" data-toggle="modal" data-dismiss="modal" class="far fa-trash-alt fa-2x" id="'
                         +response.channels[i]._id+'"></a><a href="/admin/channel/edit/'+response.channels[i]._id+'" class="fa-2x far fa-edit" id="'
                         +response.channels[i]._id+'"></a></td></tr>';
+                        
+                        list.push(mytab);
                     }
-                    
-                    $("#channels-corps").append(mytab);
+                     $("#channels-corps").html(list);
+                     $('#channels-corps').pageMe({pagerSelector:'#myPager',showPrevNext:true,hidePageNumbers:false,perPage:4});                     
 
                     $('.fa-edit').on("click", function(){
 
@@ -55,8 +178,7 @@ $(document).ready(function() {
 
                        localStorage.setItem("userChannelId", myId);
 
-
-                        console.log(myId);
+                        console.log(myId); 
 
                     });
 
@@ -109,69 +231,6 @@ $(document).ready(function() {
 
     }// fin if
 
-
-
-   /* function pagination () {
-
-          function makeList() {
-                        for (x = 0; x < response.channels.length; x++)
-                            mytab +="<tr><td ><img class='rounded-circle' style='font-size:2em; width:31px; height:32px;' src='"+response.channels[x].avatar
-                        +"' id='profil'></td><td >"+response.channels[x].channel_name
-                        +"</td><td >"+response.channels[x].status
-                        +"</td><td ><a href='#bannirModal' data-toggle='modal' data-dismiss='modal' class='far fa-trash-alt fa-2x'></a><a href='#' class='fa-2x far fa-edit' id='"
-                        +channelId+"'></a></td></tr>";
-
-                        numberOfPages = getNumberOfPages();
-                    }
-
-                    function getNumberOfPages() {
-                        return Math.ceil(response.channels.length / numberPerPage);
-                    }
-
-                    function nextPage() {
-                        currentPage += 1;
-                        loadList();
-                    }
-
-                    function previousPage() {
-                        currentPage -= 1;
-                        loadList();
-                    }
-
-                    function loadList() {
-                        let begin = ((currentPage - 1) * numberPerPage);
-                        let end = begin + numberPerPage;
-
-                        pageList = list.slice(begin, end);
-                        drawList();
-                        check();
-                    }
-                
-                    function drawList() {
-                        let mypage = $("#pagination_data");
-                        for (r = 0; r < pageList.length; r++) {
-                            mypage += pageList[r] + "<br/>";
-                        }
-
-                        $("#pagination_data").html(mypage);
-                    }
-
-                    function check() {
-                        document.getElementById("next").disabled = currentPage == numberOfPages ? true : false;
-                        document.getElementById("previous").disabled = currentPage == 1 ? true : false;
-                        document.getElementById("first").disabled = currentPage == 1 ? true : false;
-                        document.getElementById("last").disabled = currentPage == numberOfPages ? true : false;
-                    }
-
-                    function load() {
-                        makeList();
-                        loadList();
-                    }
-                        
-                    window.onload = load;
-        
-    }// fin fonction*/
-   
 
 });
 

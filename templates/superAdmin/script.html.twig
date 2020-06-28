@@ -214,15 +214,65 @@ $(document).ready(function() {
             
                 if(response != undefined)
                 {
-                    /*$('#nbAbonne').html(response.favoris);
-                    console.log(response.favoris);*/
+                    $('#nombre_dutilisateurs').html(response.users[0].Nombre_utilisateurs_actifs);
+                    console.log(response.users[0].Nombre_utilisateurs_actifs);
                 }
-                console.log(response);
+                console.log(response.users[0].Nombre_utilisateurs_actifs);
 
         }).fail((error) =>{
             
             console.log(error);
         });// fin Total utilisateurs actifs
+
+        /*
+        * le nombre d'ecoute
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/listen",
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+            if(response != undefined)
+            {
+                $('#nombre_decoute').html(response.total_ecoute);
+                console.log(response.total_ecoute);
+                
+            }
+            console.log(response);
+
+        }).fail((err) =>{
+            
+            console.log(err);
+        });// fin d'ecoute
+
+         /*
+        * le nombre de stream ecoute
+        */
+
+        $.ajax({
+            type: "GET",
+            url: "https://webradio-stream.herokuapp.com/authorized/stats/all/listen/streams",
+            headers: {
+                'Authorization':'Bearer ' + token
+            }
+        }).done((response) =>{
+            
+                if(response != undefined)
+                {
+                    $('#total_ecoute_stream').html(response.total_ecoute_stream);
+                    console.log(response.total_ecoute_stream);
+                }
+                console.log(response);
+
+        }).fail((err) =>{
+            
+            console.log(err);
+
+        });// fin nombre de stream ecoute
 
     }//end if  
 

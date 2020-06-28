@@ -1031,9 +1031,11 @@ a.d-block.mb-4.h-100 :hover {
     top: 12px;
     
 }
-
-
 .btn :hover {
     color: inherit;
 }
+.page-link:hover{
+    color: #e779a0 !important;
+}
+
 

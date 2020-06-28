@@ -225,45 +225,9 @@ function inputPassword(inputData, input){
                 {
                     $('#register-success').css("display", "block");
                     $('#register-success').html(response.message);
+                    $("#loginModal").modal('show');
 
-                    let mytoken = response.message.token;
-
-                    $.ajax({
-                        type: "GET",
-                        url: 'https://webradio-stream.herokuapp.com/authorized/users/logged',
-                        headers: {
-                            'Authorization':'Bearer ' + mytoken
-                        }
-                    })
-                    .done(function( data ) {
-
-                        localStorage.setItem("username", data.user[0].username);
-                        localStorage.setItem("avatar", data.user[0].avatar);
-                        localStorage.setItem("password", data.user[0].password);
-                        localStorage.setItem("userId", data.user[0].user_id); 
-                        localStorage.setItem("channelId", data.user[0].channel_id); 
-                        localStorage.setItem("status", data.user[0].status);
-                        localStorage.setItem("email", data.user[0].email);
-
-                            setTimeout(function(){
-
-                                window.location.href = "/profile";
-
-                            }, 2000);
-
-                    }).fail((err) =>{
-
-                        $('#register-alert').css("display", "block");
-            
-                        $('#register-alert').html(err.responseJSON.message);
-
-                        console.log(err);
-                        
-                    });
-                }
-                else console.log('failed');
-
-                    console.log(response);
+                }                        
 
             }).fail((error)=>{
 
@@ -410,9 +374,9 @@ function inputPassword(inputData, input){
                 reset();
 
                 $('#login-alert').css("display", "block");
-                $('#login-alert').html(err.responseJSON.message.message);
+                //$('#login-alert').html(err.responseJSON.message.message);
 
-                console.log(err.responseJSON.message);
+                console.log(err);
 
             });
 
@@ -438,6 +402,7 @@ function inputPassword(inputData, input){
 
             if(response != undefined) {
                 $("#passwordLost").attr("data-target", "#confirmModal")
+                $("#confirmModal").modal('show');
             }
             console.log(response);
 

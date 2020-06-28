@@ -52,14 +52,12 @@ String.prototype.rtrim = function() {
     
     const token      =  localStorage.getItem("token");
     let username     =  localStorage.getItem("username");
-    let userAvatar   =  localStorage.getItem("avatar");
     let userPassword =  localStorage.getItem("password");
     let userId       =  localStorage.getItem("userId");
     let email        =  localStorage.getItem("email");
 
    
     $('#username').attr('value', username);
-    $('#profil').attr('src', userAvatar);
     $('#password').attr('value', userPassword);
     $('#email').attr('value', email);
     

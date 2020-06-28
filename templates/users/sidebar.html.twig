@@ -10,7 +10,7 @@
     <!--Avatar-->
     <a class="nav-link d-flex flex-column align-items-center" href="#">
         <div class="nav-item">
-             <img class="rounded-circle logo-setting" id="logo-setting" src="https://firebasestorage.googleapis.com/v0/b/webradio-stream.appspot.com/o/User%2F70element-1.png?alt=media&token=fa8fa419-9e5f-4738-b2de-85536002a0d1"/>
+             <img class="rounded-circle logo-setting" id="logo-setting" src="https://firebasestorage.googleapis.com/v0/b/webradio-stream.appspot.com/o/User%2F70element-1.png?alt=media&token=fa8fa419-9e5f-4738-b2de-85536002a0d1" />
         </div>
     </a>
 
@@ -76,6 +76,7 @@
         let userId       =  localStorage.getItem("userId");
         let channelId    =  localStorage.getItem("channelId");
         let status       =  localStorage.getItem("status");
+        console.log(userAvatar);
 
         $('#myname').html(username);
         $('#logo-setting').attr('src', userAvatar);
