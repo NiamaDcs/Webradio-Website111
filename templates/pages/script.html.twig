@@ -330,10 +330,6 @@ function inputPassword(inputData, input){
 
                                 let statusUser = data.user[0].status;
 
-                                if(statusUser === "B") {
-
-                                }
-
                                 localStorage.setItem("username", data.user[0].username);
                                 localStorage.setItem("avatar", data.user[0].avatar);
                                 localStorage.setItem("password", data.user[0].password);
@@ -342,11 +338,22 @@ function inputPassword(inputData, input){
                                 localStorage.setItem("status", data.user[0].status);
                                 localStorage.setItem("email", data.user[0].email);
 
+                                if(statusUser === "BANISH") {
+
                                     setTimeout(function(){
+
+                                        window.location.href = "/banni";
+
+                                    }, 2000);
+
+                                }else{
+                                  setTimeout(function(){
 
                                         window.location.href = "/profile";
 
-                                    }, 2000);
+                                    }, 2000);  
+                                }
+
 
                             }else{
 

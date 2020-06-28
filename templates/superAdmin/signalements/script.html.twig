@@ -199,10 +199,14 @@ String.prototype.rtrim = function() {
                             disable();
                            const signalement_id = $("#update_channel_signalements_id").val();
 
-                                let createUser = inputUsername(usernameShow,inpUser);///todo motif de la chaine a faire et supprression
+                                let usernameShow = $('#format-update').val();
+                                let inpUser = $('#format-update');
+                                let createUser = inputUsername(usernameShow,inpUser);
+                                
                             let data = {
-                                motif: $("#format-update").val()
+                                motif: createUser
                             };
+                          if (createUser !== undefined) {
 
                            $.ajax({
                                type: "PUT",
@@ -219,8 +223,9 @@ String.prototype.rtrim = function() {
 
                                console.log(err);
                            })
+                         }// end if
 
-                       });
+                       });//end update
 
                         console.log(signalId);
 
