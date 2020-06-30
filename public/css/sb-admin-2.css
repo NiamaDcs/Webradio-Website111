@@ -1037,5 +1037,8 @@ a.d-block.mb-4.h-100 :hover {
 .page-link:hover{
     color: #e779a0 !important;
 }
-
+.dark-mode {
+  background-color: black;
+  color: white;
+}
 
