@@ -1,7 +1,7 @@
 <?php 
 
-namespace App\Services;
-use App\Services\Month;
+namespace App\Service;
+use App\Service\Month;
 
 class CalendarService {
     function myCalen ($month, $year) {
