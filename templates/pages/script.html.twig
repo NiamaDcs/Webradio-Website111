@@ -338,18 +338,20 @@ function inputPassword(inputData, input){
                                 localStorage.setItem("status", data.user[0].status);
                                 localStorage.setItem("email", data.user[0].email);
 
+                                let myname = data.user[0].username;
+
                                 if(statusUser === "BANISH") {
 
                                     setTimeout(function(){
 
-                                        window.location.href = "/banni";
+                                        window.location.href = "/banni/"+myname;
 
                                     }, 2000);
 
                                 }else{
                                   setTimeout(function(){
 
-                                        window.location.href = "/profile";
+                                        window.location.href = "/profile/"+myname;
 
                                     }, 2000);  
                                 }
@@ -391,7 +393,7 @@ function inputPassword(inputData, input){
 
     });// fin login
 
-    $('#passwordLost').click(function(e){
+    /*$('#passwordLost').click(function(e){
 
         let emailForgotPass = $('#forgot_pass_email').val();
         let InpPassForgot = $('#forgot_pass_email');
@@ -420,6 +422,45 @@ function inputPassword(inputData, input){
 
             console.log(err.responseJSON.message);
         })
+    });*/
+
+     $('#forgot_pass_submit').on('click', (e) =>{
+        e.preventDefault(); 
+        disable();
+
+        let emailForgotPass = $('#forgot_email').val();
+        let inputPass = $('#forgot_email');
+
+        let forgotPassword = inputEmail(emailForgotPass, inputPass);
+
+        console.log(forgotPassword);
+
+        if(forgotPassword != undefined) {
+
+             $.ajax({
+            type: "POST",
+            url:"https://webradio-stream.herokuapp.com/auth/forgot/password",
+            data: {
+                email: forgotPassword,
+            }
+            }).done(function (response){
+
+                if(response != undefined) {
+                    $("#passwordLost").attr("data-target", "#confirmModal")
+                    $("#confirmModal").modal('show');
+                }
+                console.log(response);
+
+            }).fail((err) =>{
+
+                /*$('#passwordLost-danger').css("display", "block");
+                
+                $('#passwordLost-danger').html(err);*/
+
+                console.log(err);
+            });
+        }
+
     });
 
 

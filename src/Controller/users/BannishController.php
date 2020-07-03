@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 class BannishController extends BaseController {
 
     /**
-    * @Route("/", name="banni.index", methods={"GET"})
+    * @Route("/{username}", name="banni.index", methods={"GET"})
     */
     public function index() :Response
     {

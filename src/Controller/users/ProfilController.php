@@ -17,7 +17,7 @@ class ProfilController extends BaseController
 {
   
      /**
-     * @Route("/", name="profile.index", methods={"GET"})
+     * @Route("/{username}", name="profile.index", methods={"GET"})
      */
     public function index() :Response
     {
